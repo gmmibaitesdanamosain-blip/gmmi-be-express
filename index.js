@@ -31,13 +31,13 @@ const PORT = process.env.PORT || 3000;
 // // Note: Local file logging removed for Vercel compatibility
 // app.use('/uploads', express.static('uploads'));
 
-// app.get('/ping', (req, res) => {
-//   res.json({ pong: true, time: new Date().toISOString() });
-// });
+app.get('/ping', (req, res) => {
+  res.json({ pong: true, time: new Date().toISOString() });
+});
 
-// app.get('/', (req, res) => {
-//   res.json({ message: 'GMMI Backend running' });
-// });
+app.get('/', (req, res) => {
+  res.json({ message: 'GMMI Backend running' });
+});
 
 // app.use('/auth', authRoutes);
 // app.use('/api/admin', adminRoutes);
