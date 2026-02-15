@@ -1,10 +1,16 @@
 import "dotenv/config";
-import pkg from "./generated/prisma/index.js";
+import pkg from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { createRequire } from "module";
 
-const { PrismaClient } = pkg;
-const prisma = new PrismaClient({
-  datasourceUrl: process.env.DATABASE_URL,
-});
+const { Pool } = pkg;
+const require = createRequire(import.meta.url);
+const { PrismaClient } = require("./generated/prisma");
+
+const connectionString = process.env.DATABASE_URL;
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 async function testConnection() {
   console.log("🔄 Testing database connection...\n");

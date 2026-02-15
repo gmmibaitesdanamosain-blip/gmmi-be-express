@@ -43,22 +43,22 @@ app.get("/", (req, res) => {
   res.json({ message: "GMMI Backend running" });
 });
 
-// app.use('/auth', authRoutes);
+app.use('/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
-// app.use('/api/admins', adminRoutes); // Support plural
-// app.use('/api/super-admin', adminRoutes); // Support super-admin prefix
-// app.use('/api/announcements', pengumumanRoutes);
-// app.use('/api/warta', wartaRoutes);
-// app.use('/api/jadwal', ibadahRoutes);
-// app.use('/api/arsip', arsipRoutes);
-// app.use('/api/keuangan', keuanganRoutes);
-// app.use('/api/programs', programRoutes);
-// app.use('/api/pewartaan', pewartaanRoutes);
-// app.use('/api/renungan', renunganRoutes);
-// app.use('/api/carousel', carouselRoutes);
-// app.use('/api/jemaat', jemaatRoutes);
-// app.use('/api/pekerjaan', pekerjaanRoutes);
-// app.use('/api/sejarah', sejarahRoutes);
+app.use('/api/admins', adminRoutes); // Support plural
+app.use('/api/super-admin', adminRoutes); // Support super-admin prefix
+app.use('/api/announcements', pengumumanRoutes);
+app.use('/api/warta', wartaRoutes);
+app.use('/api/jadwal', ibadahRoutes);
+app.use('/api/arsip', arsipRoutes);
+app.use('/api/keuangan', keuanganRoutes);
+app.use('/api/programs', programRoutes);
+app.use('/api/pewartaan', pewartaanRoutes);
+app.use('/api/renungan', renunganRoutes);
+app.use('/api/carousel', carouselRoutes);
+app.use('/api/jemaat', jemaatRoutes);
+app.use('/api/pekerjaan', pekerjaanRoutes);
+app.use('/api/sejarah', sejarahRoutes);
 
 // // Placeholder routes for frontend services
 // app.use('/', dashboardRoutes);
