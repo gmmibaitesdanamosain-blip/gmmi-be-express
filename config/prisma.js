@@ -9,8 +9,11 @@ const { Pool } = pkg;
 const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
 
 const pool = new Pool({
-    connectionString,
-    ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false
+  connectionString,
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }
+      : false,
 });
 
 const adapter = new PrismaPg(pool);
