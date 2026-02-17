@@ -1,35 +1,8 @@
 import multer from "multer";
 import path from "path";
-import { fileURLToPath } from "url";
-import fs from "fs";
-import os from "os";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const isVercel = !!process.env.VERCEL;
-
-// Vercel: use /tmp (writable), local: use project uploads folder
-const uploadDir = isVercel
-  ? path.join(os.tmpdir(), "uploads", "thumbnails")
-  : path.join(__dirname, "..", "uploads", "thumbnails");
-
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// Configure storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const ext = path.extname(file.originalname);
-    const nameWithoutExt = path.basename(file.originalname, ext);
-    cb(null, `${nameWithoutExt}-${uniqueSuffix}${ext}`);
-  },
-});
+// Gunakan memoryStorage — file disimpan di buffer, lalu diupload ke Appwrite
+const storage = multer.memoryStorage();
 
 // File filter to accept only images
 const fileFilter = (req, file, cb) => {

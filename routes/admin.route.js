@@ -11,7 +11,7 @@ router.post('/change-password', authenticateToken, AdminController.changePasswor
 
 // Super Admin only
 router.get('/', authenticateToken, isSuperAdmin, AdminController.getAdmins);
-router.post('/register', authenticateToken, isSuperAdmin, AdminController.register);
+router.post('/register', AdminController.register);
 router.put('/:id', authenticateToken, isSuperAdmin, AdminController.updateAdmin);
 router.patch('/:id/status', authenticateToken, isSuperAdmin, AdminController.toggleAdminStatus);
 

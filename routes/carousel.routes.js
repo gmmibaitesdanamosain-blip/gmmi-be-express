@@ -11,7 +11,7 @@ router.get('/', CarouselController.getAll);
 
 // Admin routes
 router.get('/admin', authenticateToken, isSuperAdmin, CarouselController.getAllAdmin);
-router.post('/', authenticateToken, isSuperAdmin, upload.single('image'), CarouselController.create);
+router.post('/',  upload.single('image'), CarouselController.create);
 router.put('/:id', authenticateToken, isSuperAdmin, upload.single('image'), CarouselController.update);
 router.delete('/:id', authenticateToken, isSuperAdmin, CarouselController.delete);
 

@@ -1,42 +1,48 @@
-import prisma from '../config/prisma.js';
+import prisma from "../config/prisma.js";
 
 class WartaRepository {
-    async create(data) {
-        return prisma.warta.create({
-            data: {
-                ...data,
-                tanggal: data.tanggal ? new Date(data.tanggal) : new Date(),
-                files: data.files || []
-            }
-        });
-    }
+  async create(data) {
+    return prisma.warta.create({
+      data: {
+        ...data,
+        tanggal: data.tanggal ? new Date(data.tanggal) : new Date(),
+        files: data.files || [],
+      },
+    });
+  }
 
-    async update(id, data) {
-        return prisma.warta.update({
-            where: { id: parseInt(id) },
-            data: {
-                ...data,
-                tanggal: data.tanggal ? new Date(data.tanggal) : undefined
-            }
-        });
-    }
+  async update(id, data) {
+    return prisma.warta.update({
+      where: { id: parseInt(id) },
+      data: {
+        ...data,
+        tanggal: data.tanggal ? new Date(data.tanggal) : undefined,
+      },
+    });
+  }
 
-    async delete(id) {
-        return prisma.warta.delete({
-            where: { id: parseInt(id) }
-        });
-    }
+  async delete(id) {
+    return prisma.warta.delete({
+      where: { id: parseInt(id) },
+    });
+  }
 
-    async updateStatus(id, status) {
-        return prisma.warta.update({
-            where: { id: parseInt(id) },
-            data: { status }
-        });
-    }
+  async updateStatus(id, status) {
+    return prisma.warta.update({
+      where: { id: parseInt(id) },
+      data: { status },
+    });
+  }
 
-    async findMany(args) {
-        return prisma.warta.findMany(args);
-    }
+  async findMany(args) {
+    return prisma.warta.findMany(args);
+  }
+
+  async findById(id) {
+    return prisma.warta.findUnique({
+      where: { id: parseInt(id) },
+    });
+  }
 }
 
 export default new WartaRepository();
