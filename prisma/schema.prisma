@@ -162,7 +162,7 @@ model jemaat {
   jenis_kelamin       String?   @db.Char(1)
   pendidikan_terakhir String?   @db.VarChar(10)
   kategorial          String?   @db.VarChar(20)
-  sektor_id           String
+  sektor_id           String    @db.VarChar(50)
   keterangan          String?   @db.Text
   created_at          DateTime? @default(now()) @db.Timestamp(6)
   deleted_at          DateTime? @db.Timestamp(6)
@@ -171,7 +171,6 @@ model jemaat {
   pekerjaan           String?   @db.VarChar(30)
 
   // Relations
-  sector          sectors          @relation(fields: [sektor_id], references: [id], onDelete: Cascade)
   pekerjaan_ref   pekerjaan?       @relation(fields: [pekerjaan_id], references: [id])
   jemaat_sakramen jemaat_sakramen?
   jemaat_history  jemaat_history[]
@@ -429,9 +428,6 @@ model sectors {
   alamat      String?   @db.Text
   no_hp       String    @db.VarChar(20)
   created_at  DateTime? @default(now()) @db.Timestamp(6)
-
-  // Relations
-  jemaat jemaat[]
 }
 
 model sejarah {
