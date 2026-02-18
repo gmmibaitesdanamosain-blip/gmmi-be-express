@@ -16,7 +16,7 @@ class JemaatRepository {
         return prisma.jemaat.findUnique({
             where: { id: id },
             include: {
-                sector: true,
+                sectors: true,
                 jemaat_sakramen: true
             }
         });

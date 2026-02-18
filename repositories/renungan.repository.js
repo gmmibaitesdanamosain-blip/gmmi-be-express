@@ -40,3 +40,4 @@ class RenunganRepository {
 }
 
 export default new RenunganRepository();
+
