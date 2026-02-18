@@ -23,30 +23,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Security: Helmet adds secure HTTP headers
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      useDefaults: true,
-      directives: {
-        "default-src": ["'self'"],
-        "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-        "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdn.jsdelivr.net"],
-        "img-src": ["'self'", "data:", "blob:", "*"],
-        "connect-src": ["'self'", "*", "http://localhost:*", "ws://localhost:*"],
-        "font-src": ["'self'", "https://fonts.gstatic.com", "data:"],
-        "object-src": ["'none'"],
-        "upgrade-insecure-requests": [],
-      },
-    },
-    crossOriginEmbedderPolicy: false,
-    crossOriginResourcePolicy: { policy: "cross-origin" },
-  }),
-);
+app.use(helmet());
 app.use(
   cors({
     origin: "*", // Recommended: set to specific domain in production
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 app.use(express.json());
@@ -59,28 +39,25 @@ app.get("/", (req, res) => {
   res.json({ message: "GMMI Backend running" });
 });
 
-// Suppress Chrome DevTools 404 errors
-app.get("/.well-known/appspecific/com.chrome.devtools.json", (req, res) => {
-  res.status(204).end();
-});
-
-app.use('/auth', authRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/admins', adminRoutes);
-app.use('/api/super-admin', adminRoutes);
-app.use('/api/announcements', pengumumanRoutes);
-app.use('/api/warta', wartaRoutes);
-app.use('/api/jadwal', ibadahRoutes);
-app.use('/api/arsip', arsipRoutes);
-app.use('/api/keuangan', keuanganRoutes);
-app.use('/api/programs', programRoutes);
-app.use('/api/pewartaan', pewartaanRoutes);
-app.use('/pewartaan', pewartaanRoutes); // Alias for convenience
-app.use('/api/renungan', renunganRoutes);
-app.use('/api/carousel', carouselRoutes);
-app.use('/api/jemaat', jemaatRoutes);
-app.use('/api/pekerjaan', pekerjaanRoutes);
-app.use('/api/sejarah', sejarahRoutes);
+app.use("/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/admins", adminRoutes);
+app.use("/api/super-admin", adminRoutes);
+app.use("/api/pengumuman", pengumumanRoutes);
+app.use("/api/announcements", pengumumanRoutes);
+app.use("/api/warta", wartaRoutes);
+app.use("/api/jadwal", ibadahRoutes);
+app.use("/api/agenda", ibadahRoutes);
+app.use("/api/arsip", arsipRoutes);
+app.use("/api/keuangan", keuanganRoutes);
+app.use("/api/program", programRoutes);
+app.use("/api/programs", programRoutes);
+app.use("/api/pewartaan", pewartaanRoutes);
+app.use("/api/renungan", renunganRoutes);
+app.use("/api/carousel", carouselRoutes);
+app.use("/api/jemaat", jemaatRoutes);
+app.use("/api/pekerjaan", pekerjaanRoutes);
+app.use("/api/sejarah", sejarahRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
