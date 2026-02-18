@@ -12,7 +12,7 @@ class JemaatService {
                 nama: search ? { contains: search, mode: 'insensitive' } : undefined
             },
             include: {
-                sectors: true,
+                sector: true,
                 jemaat_sakramen: true
             }
         });

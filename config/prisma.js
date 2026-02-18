@@ -17,6 +17,16 @@ const pool = new Pool({
 });
 
 const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient({
+  adapter,
+  log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
+});
+
+// Basic connection test on startup if not in production
+if (process.env.NODE_ENV !== "production") {
+  prisma.$connect()
+    .then(() => console.log("✅ Prisma connected to database"))
+    .catch((err) => console.error("❌ Prisma connection error:", err.message));
+}
 
 export default prisma;

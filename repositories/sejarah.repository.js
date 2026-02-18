@@ -20,7 +20,7 @@ class SejarahRepository {
 
   async update(id, data) {
     return prisma.sejarah.update({
-      where: { id },
+      where: { id: parseInt(id) },
       data: {
         ...data,
         tanggal_peristiwa: data.tanggal_peristiwa
@@ -32,13 +32,13 @@ class SejarahRepository {
 
   async delete(id) {
     return prisma.sejarah.delete({
-      where: { id },
+      where: { id: parseInt(id) },
     });
   }
 
   async findById(id) {
     return prisma.sejarah.findUnique({
-      where: { id },
+      where: { id: parseInt(id) },
     });
   }
 }

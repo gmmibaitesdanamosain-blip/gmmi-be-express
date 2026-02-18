@@ -1,7 +1,7 @@
 import express from 'express';
 import ProgramController from '../controllers/program.controller.js';
 import { authenticateToken } from '../middlewares/auth.middleware.js';
-import { isSuperAdmin } from '../middlewares/role.middleware.js';
+import { isSuperAdmin, isAdmin } from '../middlewares/role.middleware.js';
 const router = express.Router();
 
 // Public route for fetching programs (for Homepage section)
@@ -20,13 +20,13 @@ const router = express.Router();
 // GET /export/excel -> Super Admin
 // GET /export/word -> Super Admin
 
-router.get('/stats', authenticateToken, isSuperAdmin, ProgramController.getStats);
+router.get('/stats', authenticateToken, isAdmin, ProgramController.getStats);
 router.get('/', ProgramController.getAll);
 router.get('/export/excel', ProgramController.exportExcel);
 router.get('/export/word', ProgramController.exportWord);
 
 // Protected routes
-router.post('/', authenticateToken, isSuperAdmin, ProgramController.create);
-router.delete('/:id', authenticateToken, isSuperAdmin, ProgramController.delete);
+router.post('/', authenticateToken, isAdmin, ProgramController.create);
+router.delete('/:id', authenticateToken, isAdmin, ProgramController.delete);
 
 export default router;

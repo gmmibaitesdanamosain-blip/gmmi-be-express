@@ -13,7 +13,7 @@ class WartaRepository {
 
   async update(id, data) {
     return prisma.warta_ibadah.update({
-      where: { id },
+      where: { id: id },
       data: {
         ...data,
         tanggal: data.tanggal ? new Date(data.tanggal) : undefined,
@@ -23,13 +23,13 @@ class WartaRepository {
 
   async delete(id) {
     return prisma.warta_ibadah.delete({
-      where: { id },
+      where: { id: id },
     });
   }
 
   async updateStatus(id, status) {
     return prisma.warta_ibadah.update({
-      where: { id },
+      where: { id: id },
       data: { status },
     });
   }
@@ -40,7 +40,7 @@ class WartaRepository {
 
   async findById(id) {
     return prisma.warta_ibadah.findUnique({
-      where: { id },
+      where: { id: id },
     });
   }
 }
