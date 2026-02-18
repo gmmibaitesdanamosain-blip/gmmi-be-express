@@ -5,6 +5,7 @@ import { isSuperAdmin, isAdmin } from '../middlewares/role.middleware.js';
 
 const router = express.Router();
 
+// Public endpoint for autocomplete (no authentication required)
 router.get('/', JemaatController.getAll);
 router.post('/', authenticateToken, isAdmin, JemaatController.create);
 router.put('/:id', authenticateToken, isAdmin, JemaatController.update);
