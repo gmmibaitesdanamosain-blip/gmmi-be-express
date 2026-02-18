@@ -5,10 +5,14 @@ class PengumumanController {
     async getAll(req, res) {
         try {
             const data = await PengumumanService.getAll();
-            return res.status(200).json(data);
+            return res.status(200).json({ success: true, data });
         } catch (error) {
-            console.error('Error in PengumumanController.getAll:', error);
-            return res.status(500).json({ success: false, message: 'Gagal mengambil data pengumuman' });
+            console.error('[GET /api/pengumuman] Error:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Gagal mengambil data pengumuman',
+                error: process.env.NODE_ENV === 'development' ? error.message : undefined
+            });
         }
     }
 

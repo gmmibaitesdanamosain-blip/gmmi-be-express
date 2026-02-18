@@ -1,0 +1,381 @@
+### ===========================
+### GMMI Backend API Requests
+### ===========================
+
+### ---------------------------
+### 1. SEED: Buat Super Admin pertama (jalankan via terminal)
+###    node seed-admin.js
+### ---------------------------
+
+### ---------------------------
+### 2. LOGIN - Dapatkan Token
+### ---------------------------
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "superadmin@gmmi.com",
+    "password": "Admin@12345"
+}
+
+### ---------------------------
+### 3. REGISTER ADMIN BARU (butuh token super_admin)
+### ---------------------------
+POST http://localhost:3000/api/admin/register
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "nama": "Admin Majelis 1",
+    "email": "admin.majelis1@gmmi.com",
+    "password": "Majelis@123",
+    "role": "admin_majelis"
+}
+
+### ---------------------------
+### 4. REGISTER SUPER ADMIN BARU
+### ---------------------------
+POST http://localhost:3000/api/admin/register
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "nama": "Super Admin 2",
+    "email": "superadmin2@gmmi.com",
+    "password": "SuperAdmin@456",
+    "role": "super_admin"
+}
+
+### ---------------------------
+### 5. GET ALL ADMINS
+### ---------------------------
+GET http://localhost:3000/api/admin
+Authorization: Bearer {{token}}
+
+### ---------------------------
+### 6. GET DASHBOARD SUMMARY
+### ---------------------------
+GET http://localhost:3000/api/admin/summary
+Authorization: Bearer {{token}}
+
+### ---------------------------
+### 7. UPDATE ADMIN
+### ---------------------------
+PUT http://localhost:3000/api/admin/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "Admin Majelis Updated",
+    "email": "admin.majelis1@gmmi.com",
+    "role": "admin_majelis"
+}
+
+### ---------------------------
+### 8. TOGGLE ADMIN STATUS (aktif/nonaktif)
+### ---------------------------
+PATCH http://localhost:3000/api/admin/1/status
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "isActive": false
+}
+
+### ---------------------------
+### 9. CHANGE PASSWORD
+### ---------------------------
+POST http://localhost:3000/api/admin/change-password
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "currentPassword": "Admin@12345",
+    "newPassword": "NewAdmin@789"
+}
+
+### ---------------------------
+### 10. GET ME (info user dari token)
+### ---------------------------
+GET http://localhost:3000/auth/me
+Authorization: Bearer {{token}}
+
+### ---------------------------
+### VERCEL PRODUCTION
+### ---------------------------
+
+### LOGIN (Production)
+POST https://gmmi-be-express.vercel.app/auth/login
+Content-Type: application/json
+
+{
+    "email": "superadmin@gmmi.com",
+    "password": "Admin@12345"
+}
+
+### GET WARTA (Production)
+GET https://gmmi-be-express.vercel.app/api/warta
+
+### ===========================
+### UPLOAD IMAGE TESTING (Appwrite Storage)
+### ===========================
+
+### ---------------------------
+### 11. CAROUSEL - GET ALL (Public)
+### ---------------------------
+GET http://localhost:3000/api/carousel
+
+### ---------------------------
+### 12. CAROUSEL - CREATE (dengan gambar)
+### ---------------------------
+POST http://localhost:3000/api/carousel
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----FormBoundary
+
+------FormBoundary
+Content-Disposition: form-data; name="title"
+
+Selamat Datang di GMMI
+------FormBoundary
+Content-Disposition: form-data; name="subtitle"
+
+Gereja Masehi Musyafir Indonesia
+------FormBoundary
+Content-Disposition: form-data; name="quote"
+
+Tuhan memberkati kita semua
+------FormBoundary
+Content-Disposition: form-data; name="badge"
+
+Baru
+------FormBoundary
+Content-Disposition: form-data; name="cta_text"
+
+Lihat Selengkapnya
+------FormBoundary
+Content-Disposition: form-data; name="cta_link"
+
+/about
+------FormBoundary
+Content-Disposition: form-data; name="order_index"
+
+1
+------FormBoundary
+Content-Disposition: form-data; name="is_active"
+
+true
+------FormBoundary
+Content-Disposition: form-data; name="image"; filename="carousel-test.png"
+Content-Type: image/png
+
+< ./lovely linux.png
+------FormBoundary--
+
+### ---------------------------
+### 13. CAROUSEL - UPDATE (dengan gambar baru)
+### ---------------------------
+PUT http://localhost:3000/api/carousel/{{carouselId}}
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----FormBoundary
+
+------FormBoundary
+Content-Disposition: form-data; name="title"
+
+Carousel Updated Title
+------FormBoundary
+Content-Disposition: form-data; name="image"; filename="carousel-updated.png"
+Content-Type: image/png
+
+< ./test-image.png
+------FormBoundary--
+
+### ---------------------------
+### 14. CAROUSEL - DELETE
+### ---------------------------
+DELETE http://localhost:3000/api/carousel/{{carouselId}}
+Authorization: Bearer {{token}}
+
+### ---------------------------
+### 15. SEJARAH - GET ALL (Public)
+### ---------------------------
+GET http://localhost:3000/api/sejarah
+
+### ---------------------------
+### 16. SEJARAH - CREATE (dengan gambar)
+### ---------------------------
+POST http://localhost:3000/api/sejarah
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----FormBoundary
+
+------FormBoundary
+Content-Disposition: form-data; name="judul"
+
+Berdirinya GMMI Bait Suci Tanjungpinang
+------FormBoundary
+Content-Disposition: form-data; name="tanggal_peristiwa"
+
+1985-03-15
+------FormBoundary
+Content-Disposition: form-data; name="deskripsi"
+
+GMMI Bait Suci Tanjungpinang didirikan pada tahun 1985 oleh sekelompok jemaat yang rindu akan rumah ibadah.
+------FormBoundary
+Content-Disposition: form-data; name="image"; filename="sejarah-test.png"
+Content-Type: image/png
+
+< ./test-image.png
+------FormBoundary--
+
+### ---------------------------
+### 17. SEJARAH - UPDATE (dengan gambar baru)
+### ---------------------------
+PUT http://localhost:3000/api/sejarah/{{sejarahId}}
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----FormBoundary
+
+------FormBoundary
+Content-Disposition: form-data; name="judul"
+
+Sejarah GMMI Updated
+------FormBoundary
+Content-Disposition: form-data; name="image"; filename="sejarah-updated.png"
+Content-Type: image/png
+
+< ./test-image.png
+------FormBoundary--
+
+### ---------------------------
+### 18. SEJARAH - DELETE
+### ---------------------------
+DELETE http://localhost:3000/api/sejarah/{{sejarahId}}
+Authorization: Bearer {{token}}
+
+### ---------------------------
+### 19. RENUNGAN - GET ALL (Public)
+### ---------------------------
+GET http://localhost:3000/api/renungan
+
+### ---------------------------
+### 20. RENUNGAN - CREATE (dengan gambar)
+### ---------------------------
+POST http://localhost:3000/api/renungan
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----FormBoundary
+
+------FormBoundary
+Content-Disposition: form-data; name="judul"
+
+Hidup Dalam Kasih Kristus
+------FormBoundary
+Content-Disposition: form-data; name="isi"
+
+Kasih itu sabar, kasih itu murah hati. Ia tidak cemburu. Ia tidak memegahkan diri dan tidak sombong. (1 Korintus 13:4)
+------FormBoundary
+Content-Disposition: form-data; name="tanggal"
+
+2026-02-17
+------FormBoundary
+Content-Disposition: form-data; name="gambar"; filename="renungan-test.png"
+Content-Type: image/png
+
+< ./test-image.png
+------FormBoundary--
+
+### ---------------------------
+### 21. RENUNGAN - GET BY ID
+### ---------------------------
+GET http://localhost:3000/api/renungan/{{renunganId}}
+
+### ---------------------------
+### 22. RENUNGAN - UPDATE (dengan gambar baru)
+### ---------------------------
+PUT http://localhost:3000/api/renungan/{{renunganId}}
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----FormBoundary
+
+------FormBoundary
+Content-Disposition: form-data; name="judul"
+
+Renungan Updated Title
+------FormBoundary
+Content-Disposition: form-data; name="gambar"; filename="renungan-updated.png"
+Content-Type: image/png
+
+< ./test-image.png
+------FormBoundary--
+
+### ---------------------------
+### 23. RENUNGAN - DELETE
+### ---------------------------
+DELETE http://localhost:3000/api/renungan/{{renunganId}}
+Authorization: Bearer {{token}}
+
+### ---------------------------
+### 24. WARTA - GET ALL (Public)
+### ---------------------------
+GET http://localhost:3000/api/warta
+
+### ---------------------------
+### 25. WARTA - CREATE (dengan thumbnail)
+### ---------------------------
+POST http://localhost:3000/api/warta
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----FormBoundary
+
+------FormBoundary
+Content-Disposition: form-data; name="judul"
+
+Warta Jemaat Minggu 17 Februari 2026
+------FormBoundary
+Content-Disposition: form-data; name="tanggal"
+
+2026-02-17
+------FormBoundary
+Content-Disposition: form-data; name="isi"
+
+Ibadah Minggu pukul 09.00 WIB di Gedung Gereja GMMI Bait Suci Tanjungpinang.
+------FormBoundary
+Content-Disposition: form-data; name="status"
+
+approved
+------FormBoundary
+Content-Disposition: form-data; name="thumbnail"; filename="warta-test.png"
+Content-Type: image/png
+
+< ./test-image.png
+------FormBoundary--
+
+### ---------------------------
+### 26. WARTA - UPDATE (dengan thumbnail baru)
+### ---------------------------
+PUT http://localhost:3000/api/warta/{{wartaId}}
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----FormBoundary
+
+------FormBoundary
+Content-Disposition: form-data; name="judul"
+
+Warta Updated Title
+------FormBoundary
+Content-Disposition: form-data; name="thumbnail"; filename="warta-updated.png"
+Content-Type: image/png
+
+< ./test-image.png
+------FormBoundary--
+
+### ---------------------------
+### 27. WARTA - UPDATE STATUS
+### ---------------------------
+PATCH http://localhost:3000/api/warta/{{wartaId}}/status
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "status": "approved"
+}
+
+### ---------------------------
+### 28. WARTA - DELETE
+### ---------------------------
+DELETE http://localhost:3000/api/warta/{{wartaId}}
+Authorization: Bearer {{token}}

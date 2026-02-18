@@ -5,23 +5,34 @@ class RenunganController {
   async getAll(req, res) {
     try {
       const data = await RenunganService.getAll();
-      return res.json(data);
+      return res.status(200).json({ success: true, data });
     } catch (err) {
-      console.error("Error in RenunganController.getAll:", err.message);
-      res
-        .status(500)
-        .json({ error: "Internal Server Error", details: err.message });
+      console.error("[GET /api/renungan] Error:", err);
+      res.status(500).json({
+        success: false,
+        message: "Gagal mengambil data renungan",
+        error: process.env.NODE_ENV === 'development' ? err.message : undefined
+      });
     }
   }
 
   async getById(req, res) {
     try {
       const data = await RenunganService.getById(req.params.id);
-      if (!data) return res.status(404).json({ error: "Renungan not found" });
-      return res.json(data);
+      if (!data) {
+        return res.status(404).json({
+          success: false,
+          message: "Renungan tidak ditemukan"
+        });
+      }
+      return res.status(200).json({ success: true, data });
     } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Internal Server Error" });
+      console.error("[GET /api/renungan/:id] Error:", err);
+      res.status(500).json({
+        success: false,
+        message: "Gagal mengambil detail renungan",
+        error: process.env.NODE_ENV === 'development' ? err.message : undefined
+      });
     }
   }
 
@@ -40,10 +51,18 @@ class RenunganController {
         tanggal,
         gambar,
       });
-      return res.status(201).json(data);
+      return res.status(201).json({
+        success: true,
+        data,
+        message: "Renungan berhasil dibuat"
+      });
     } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Internal Server Error" });
+      console.error("[POST /api/renungan] Error:", err);
+      res.status(500).json({
+        success: false,
+        message: "Gagal membuat renungan",
+        error: process.env.NODE_ENV === 'development' ? err.message : undefined
+      });
     }
   }
 
@@ -68,20 +87,35 @@ class RenunganController {
         tanggal,
         gambar,
       });
-      return res.json(data);
+      return res.status(200).json({
+        success: true,
+        data,
+        message: "Renungan berhasil diperbarui"
+      });
     } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Internal Server Error" });
+      console.error("[PUT /api/renungan] Error:", err);
+      res.status(500).json({
+        success: false,
+        message: "Gagal memperbarui renungan",
+        error: process.env.NODE_ENV === 'development' ? err.message : undefined
+      });
     }
   }
 
   async delete(req, res) {
     try {
       await RenunganService.delete(req.params.id);
-      return res.json({ message: "Renungan deleted successfully" });
+      return res.status(200).json({
+        success: true,
+        message: "Renungan berhasil dihapus"
+      });
     } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Internal Server Error" });
+      console.error("[DELETE /api/renungan] Error:", err);
+      res.status(500).json({
+        success: false,
+        message: "Gagal menghapus renungan",
+        error: process.env.NODE_ENV === 'development' ? err.message : undefined
+      });
     }
   }
 }

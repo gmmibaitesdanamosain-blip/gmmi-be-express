@@ -5,16 +5,51 @@ import { generatePewartaanExcel, generatePewartaanWord } from '../utils/fileExpo
 class PewartaanController {
     async create(req, res) {
         try {
+            console.log('[POST /api/pewartaan] Request received');
+            console.log('[POST /api/pewartaan] User:', req.user);
+            console.log('[POST /api/pewartaan] Request body keys:', Object.keys(req.body));
+
+            // Validasi required fields
+            const { judul, tanggal_ibadah } = req.body;
+
+            if (!judul || judul.trim() === '') {
+                console.error('[POST /api/pewartaan] Validation error: judul is required');
+                return res.status(400).json({
+                    success: false,
+                    message: 'Judul warta wajib diisi'
+                });
+            }
+
+            if (!tanggal_ibadah) {
+                console.error('[POST /api/pewartaan] Validation error: tanggal_ibadah is required');
+                return res.status(400).json({
+                    success: false,
+                    message: 'Tanggal ibadah wajib diisi'
+                });
+            }
+
+            console.log('[POST /api/pewartaan] Creating pewartaan...');
             const result = await PewartaanService.create(req.body);
+            console.log('[POST /api/pewartaan] Pewartaan created with ID:', result.id);
 
             if (req.body.status === 'approved') {
+                console.log('[POST /api/pewartaan] Triggering notifications...');
                 await this.triggerNotifications(result.id);
             }
 
-            res.status(201).json({ success: true, message: 'Pewartaan berhasil dibuat', id: result.id });
+            res.status(201).json({
+                success: true,
+                message: 'Pewartaan berhasil dibuat',
+                id: result.id
+            });
         } catch (error) {
-            console.error('Error in PewartaanController.create:', error);
-            res.status(500).json({ success: false, message: 'Gagal membuat pewartaan', error: error.message });
+            console.error('[POST /api/pewartaan] Error:', error);
+            console.error('[POST /api/pewartaan] Error stack:', error.stack);
+            res.status(500).json({
+                success: false,
+                message: 'Gagal membuat pewartaan',
+                error: process.env.NODE_ENV === 'development' ? error.message : undefined
+            });
         }
     }
 

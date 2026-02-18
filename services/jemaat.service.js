@@ -6,7 +6,7 @@ class JemaatService {
 
         return await JemaatRepository.findAll({
             where: {
-                sektor_id: sektor_id ? parseInt(sektor_id) : undefined,
+                sektor_id: sektor_id || undefined,
                 pendidikan_terakhir: pendidikan || undefined,
                 kategorial: kategorial ? { contains: kategorial, mode: 'insensitive' } : undefined,
                 nama: search ? { contains: search, mode: 'insensitive' } : undefined
@@ -45,7 +45,7 @@ class JemaatService {
 
     async deleteSector(id) {
         const membersCount = await JemaatRepository.count({
-            where: { sektor_id: parseInt(id) }
+            where: { sektor_id: id }
         });
 
         if (membersCount > 0) {

@@ -14,7 +14,7 @@ class JemaatRepository {
 
     async findById(id) {
         return prisma.jemaat.findUnique({
-            where: { id: parseInt(id) },
+            where: { id: id },
             include: {
                 sectors: true,
                 jemaat_sakramen: true
@@ -29,11 +29,24 @@ class JemaatRepository {
             jenis_kelamin, tempat_lahir, tanggal_lahir
         } = data;
 
+        // Validasi sektor_id
+        if (!sektor_id) {
+            throw new Error('Sektor wajib dipilih');
+        }
+
+        // Konversi sektor_id ke string jika frontend mengirim sebagai number
+        const sektorIdString = typeof sektor_id === 'number' ? String(sektor_id) : sektor_id;
+
+        // Validasi format sektor_id (harus string dan tidak kosong)
+        if (typeof sektorIdString !== 'string' || sektorIdString.trim() === '') {
+            throw new Error('Sektor ID tidak valid');
+        }
+
         return prisma.$transaction(async (tx) => {
             return tx.jemaat.create({
                 data: {
                     nama,
-                    sektor_id: parseInt(sektor_id),
+                    sektor_id: sektorIdString,
                     pendidikan_terakhir,
                     pekerjaan,
                     kategorial,
@@ -61,12 +74,15 @@ class JemaatRepository {
             jenis_kelamin, tempat_lahir, tanggal_lahir
         } = data;
 
+        // Konversi sektor_id ke string jika frontend mengirim sebagai number
+        const sektorIdString = sektor_id ? (typeof sektor_id === 'number' ? String(sektor_id) : sektor_id) : undefined;
+
         return prisma.$transaction(async (tx) => {
             return tx.jemaat.update({
-                where: { id: parseInt(id) },
+                where: { id: id },
                 data: {
                     nama,
-                    sektor_id: parseInt(sektor_id),
+                    sektor_id: sektorIdString,
                     pendidikan_terakhir,
                     pekerjaan,
                     kategorial,
@@ -97,7 +113,7 @@ class JemaatRepository {
 
     async softDelete(id) {
         return prisma.jemaat.update({
-            where: { id: parseInt(id) },
+            where: { id: id },
             data: { deleted_at: new Date() }
         });
     }
@@ -125,14 +141,14 @@ class JemaatRepository {
 
     async updateSector(id, data) {
         return prisma.sectors.update({
-            where: { id: parseInt(id) },
+            where: { id: id },
             data
         });
     }
 
     async deleteSector(id) {
         return prisma.sectors.delete({
-            where: { id: parseInt(id) }
+            where: { id: id }
         });
     }
 }

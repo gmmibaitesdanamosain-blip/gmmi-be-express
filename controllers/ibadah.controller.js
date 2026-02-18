@@ -20,8 +20,12 @@ class IbadahController {
                 data: formatted
             });
         } catch (error) {
-            console.error('Error in IbadahController.getAll:', error);
-            return res.status(500).json({ success: false, message: 'Gagal mengambil data jadwal' });
+            console.error('[GET /api/ibadah] Error:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Gagal mengambil data jadwal',
+                error: process.env.NODE_ENV === 'development' ? error.message : undefined
+            });
         }
     }
 
@@ -48,8 +52,12 @@ class IbadahController {
                 }
             });
         } catch (error) {
-            console.error('Error in IbadahController.create:', error);
-            return res.status(500).json({ success: false, message: 'Gagal membuat jadwal' });
+            console.error('[POST /api/ibadah] Error:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Gagal membuat jadwal',
+                error: process.env.NODE_ENV === 'development' ? error.message : undefined
+            });
         }
     }
 
@@ -72,8 +80,12 @@ class IbadahController {
                 }
             });
         } catch (error) {
-            console.error('Error in IbadahController.update:', error);
-            return res.status(500).json({ success: false, message: 'Gagal memperbarui jadwal' });
+            console.error('[PUT /api/ibadah/:id] Error:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Gagal memperbarui jadwal',
+                error: process.env.NODE_ENV === 'development' ? error.message : undefined
+            });
         }
     }
 
@@ -86,8 +98,12 @@ class IbadahController {
                 message: 'Jadwal berhasil dihapus'
             });
         } catch (error) {
-            console.error('Error in IbadahController.delete:', error);
-            return res.status(500).json({ success: false, message: 'Gagal menghapus jadwal' });
+            console.error('[DELETE /api/ibadah/:id] Error:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Gagal menghapus jadwal',
+                error: process.env.NODE_ENV === 'development' ? error.message : undefined
+            });
         }
     }
 }

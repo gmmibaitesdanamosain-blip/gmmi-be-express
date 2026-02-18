@@ -22,7 +22,7 @@ class CarouselRepository {
 
     async findById(id) {
         return prisma.carousel_slides.findUnique({
-            where: { id: parseInt(id) }
+            where: { id: id }
         });
     }
 
@@ -38,7 +38,7 @@ class CarouselRepository {
 
     async update(id, data) {
         return prisma.carousel_slides.update({
-            where: { id: parseInt(id) },
+            where: { id: id },
             data: {
                 ...data,
                 order_index: data.order_index !== undefined ? parseInt(data.order_index) : undefined,
@@ -49,7 +49,7 @@ class CarouselRepository {
 
     async delete(id) {
         return prisma.carousel_slides.delete({
-            where: { id: parseInt(id) }
+            where: { id: id }
         });
     }
 }

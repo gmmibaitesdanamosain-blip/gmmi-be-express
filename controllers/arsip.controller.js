@@ -9,10 +9,14 @@ class ArsipController {
             }
 
             const data = await ArsipService.getArsip(parseInt(bulan), parseInt(tahun));
-            return res.status(200).json(data);
+            return res.status(200).json({ success: true, data });
         } catch (error) {
-            console.error('Error in ArsipController.getArsip:', error);
-            return res.status(500).json({ success: false, message: 'Gagal mengambil data arsip' });
+            console.error('[GET /api/arsip] Error:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Gagal mengambil data arsip',
+                error: process.env.NODE_ENV === 'development' ? error.message : undefined
+            });
         }
     }
 }

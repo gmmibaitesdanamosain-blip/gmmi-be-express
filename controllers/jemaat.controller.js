@@ -9,30 +9,79 @@ class JemaatController {
 
     async getAll(req, res) {
         try {
+            console.log('[GET /api/jemaat] Request received');
+            console.log('[GET /api/jemaat] Query params:', req.query);
+
             const data = await JemaatService.getAllJemaat(req.query);
+
+            console.log(`[GET /api/jemaat] Success - Found ${data.length} jemaat`);
             res.json({ success: true, data });
         } catch (error) {
-            console.error('Error in JemaatController.getAll:', error);
-            res.status(500).json({ success: false, message: 'Gagal mengambil data jemaat' });
+            console.error('[GET /api/jemaat] Error:', error);
+            console.error('[GET /api/jemaat] Error stack:', error.stack);
+            res.status(500).json({
+                success: false,
+                message: 'Gagal mengambil data jemaat',
+                error: process.env.NODE_ENV === 'development' ? error.message : undefined
+            });
         }
     }
 
     async create(req, res) {
         try {
-            const { pekerjaan, nama } = req.body;
+            console.log('[POST /api/jemaat] Request received');
+            console.log('[POST /api/jemaat] User:', req.user);
+            console.log('[POST /api/jemaat] Request body:', JSON.stringify(req.body, null, 2));
 
-            if (!pekerjaan || !JemaatController.VALID_PEKERJAAN.includes(pekerjaan)) {
-                return res.status(400).json({ success: false, error: 'Pekerjaan tidak valid' });
+            const { pekerjaan, nama, sektor_id } = req.body;
+
+            // Validasi nama
+            if (!nama || nama.trim() === '') {
+                console.error('[POST /api/jemaat] Validation error: nama is required');
+                return res.status(400).json({
+                    success: false,
+                    message: 'Nama jemaat wajib diisi'
+                });
             }
 
+            // Validasi sektor
+            if (!sektor_id) {
+                console.error('[POST /api/jemaat] Validation error: sektor_id is required');
+                return res.status(400).json({
+                    success: false,
+                    message: 'Sektor wajib dipilih'
+                });
+            }
+
+            // Validasi pekerjaan
+            if (!pekerjaan || !JemaatController.VALID_PEKERJAAN.includes(pekerjaan)) {
+                console.error('[POST /api/jemaat] Validation error: invalid pekerjaan:', pekerjaan);
+                return res.status(400).json({
+                    success: false,
+                    message: 'Pekerjaan tidak valid. Pilih salah satu: ' + JemaatController.VALID_PEKERJAAN.join(', ')
+                });
+            }
+
+            console.log('[POST /api/jemaat] Creating jemaat...');
             const jemaat = await JemaatService.createJemaat(req.body);
+            console.log('[POST /api/jemaat] Jemaat created with ID:', jemaat.id);
 
             await logActivity(req.user?.id, req.user?.nama, 'TAMBAH', 'JEMAAT', `Menambahkan jemaat baru: ${nama}`);
 
-            res.status(201).json({ success: true, id: jemaat.id, message: 'Data jemaat berhasil ditambahkan' });
+            res.status(201).json({
+                success: true,
+                id: jemaat.id,
+                message: 'Data jemaat berhasil ditambahkan'
+            });
         } catch (error) {
-            console.error('Error in JemaatController.create:', error);
-            res.status(500).json({ success: false, message: 'Gagal menambah data jemaat', error: error.message });
+            console.error('[POST /api/jemaat] Error:', error);
+            console.error('[POST /api/jemaat] Error message:', error.message);
+            console.error('[POST /api/jemaat] Error stack:', error.stack);
+            res.status(500).json({
+                success: false,
+                message: 'Gagal menambah data jemaat',
+                error: process.env.NODE_ENV === 'development' ? error.message : undefined
+            });
         }
     }
 

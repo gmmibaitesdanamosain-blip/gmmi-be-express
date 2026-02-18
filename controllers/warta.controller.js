@@ -5,15 +5,15 @@ class WartaController {
   async getAll(req, res) {
     try {
       const result = await WartaService.getAll(req.query);
-      return res.status(200).json(result);
+      return res.status(200).json({ success: true, ...result });
     } catch (error) {
-      console.error("Error in WartaController.getAll:", error.message);
+      console.error("[GET /api/warta] Error:", error.message);
       return res
         .status(500)
         .json({
           success: false,
           message: "Gagal mengambil data warta",
-          error: error.message,
+          error: process.env.NODE_ENV === "development" ? error.message : undefined,
         });
     }
   }
