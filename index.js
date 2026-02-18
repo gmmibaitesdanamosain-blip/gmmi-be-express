@@ -39,23 +39,23 @@ app.get("/", (req, res) => {
   res.json({ message: "GMMI Backend running" });
 });
 
-app.use('/auth', authRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/admins', adminRoutes);
-app.use('/api/super-admin', adminRoutes);
-app.use('/api/pengumuman', pengumumanRoutes);
-app.use('/api/warta', wartaRoutes);
-app.use('/api/jadwal', ibadahRoutes);
-app.use('/api/agenda', ibadahRoutes);
-app.use('/api/arsip', arsipRoutes);
-app.use('/api/keuangan', keuanganRoutes);
-app.use('/api/program', programRoutes);
-app.use('/api/pewartaan', pewartaanRoutes);
-app.use('/api/renungan', renunganRoutes);
-app.use('/api/carousel', carouselRoutes);
-app.use('/api/jemaat', jemaatRoutes);
-app.use('/api/pekerjaan', pekerjaanRoutes);
-app.use('/api/sejarah', sejarahRoutes);
+app.use("/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/admins", adminRoutes);
+app.use("/api/super-admin", adminRoutes);
+app.use("/api/pengumuman", pengumumanRoutes);
+app.use("/api/warta", wartaRoutes);
+app.use("/api/jadwal", ibadahRoutes);
+app.use("/api/agenda", ibadahRoutes);
+app.use("/api/arsip", arsipRoutes);
+app.use("/api/keuangan", keuanganRoutes);
+app.use("/api/program", programRoutes);
+app.use("/api/pewartaan", pewartaanRoutes);
+app.use("/api/renungan", renunganRoutes);
+app.use("/api/carousel", carouselRoutes);
+app.use("/api/jemaat", jemaatRoutes);
+app.use("/api/pekerjaan", pekerjaanRoutes);
+app.use("/api/sejarah", sejarahRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
