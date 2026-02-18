@@ -1,175 +1,137 @@
-import prisma from "../config/prisma.js";
+import prisma from '../config/prisma.js';
 
 class JemaatRepository {
-  async findAll(args = {}) {
-    return prisma.jemaat.findMany({
-      ...args,
-      where: {
-        ...args.where,
-        deleted_at: null,
-      },
-      orderBy: args.orderBy || { nama: "asc" },
-    });
-  }
-
-  async findById(id) {
-    return prisma.jemaat.findUnique({
-      where: { id: id },
-      include: {
-        sector: true,
-        jemaat_sakramen: true,
-      },
-    });
-  }
-
-  async create(data) {
-    const {
-      nama,
-      sektor_id,
-      pendidikan_terakhir,
-      pekerjaan,
-      kategorial,
-      keterangan,
-      sakramen,
-      jenis_kelamin,
-      tempat_lahir,
-      tanggal_lahir,
-    } = data;
-
-    // Validasi sektor_id
-    if (!sektor_id) {
-      throw new Error("Sektor wajib dipilih");
+    async findAll(args = {}) {
+        return prisma.jemaat.findMany({
+            ...args,
+            where: {
+                ...args.where,
+                deleted_at: null
+            },
+            orderBy: args.orderBy || { nama: 'asc' }
+        });
     }
 
-    // Konversi sektor_id ke string jika frontend mengirim sebagai number
-    const sektorIdString =
-      typeof sektor_id === "number" ? String(sektor_id) : sektor_id;
+    async create(data) {
+        const {
+            nama, sektor_id, pendidikan_terakhir, pekerjaan,
+            kategorial, keterangan, sakramen,
+            jenis_kelamin, tempat_lahir, tanggal_lahir
+        } = data;
 
-    // Validasi format sektor_id (harus string dan tidak kosong)
-    if (typeof sektorIdString !== "string" || sektorIdString.trim() === "") {
-      throw new Error("Sektor ID tidak valid");
+        // Normalisasi ID Sektor
+        const sektorIdClean = String(sektor_id).trim();
+
+        return prisma.$transaction(async (tx) => {
+            return tx.jemaat.create({
+                data: {
+                    nama,
+                    sektor_id: sektorIdClean,
+                    pendidikan_terakhir,
+                    pekerjaan,
+                    kategorial,
+                    keterangan,
+                    jenis_kelamin,
+                    tempat_lahir,
+                    tanggal_lahir: tanggal_lahir ? new Date(tanggal_lahir) : null,
+                    jemaat_sakramen: {
+                        create: {
+                            bpts: !!sakramen?.bpts,
+                            sidi: !!sakramen?.sidi,
+                            nikah: !!sakramen?.nikah,
+                            meninggal: !!sakramen?.meninggal
+                        }
+                    }
+                }
+            });
+        });
     }
 
-    return prisma.$transaction(async (tx) => {
-      return tx.jemaat.create({
-        data: {
-          nama,
-          sektor_id: sektorIdString,
-          pendidikan_terakhir,
-          pekerjaan,
-          kategorial,
-          keterangan,
-          jenis_kelamin,
-          tempat_lahir,
-          tanggal_lahir: tanggal_lahir ? new Date(tanggal_lahir) : null,
-          jemaat_sakramen: {
-            create: {
-              bpts: sakramen?.bpts || false,
-              sidi: sakramen?.sidi || false,
-              nikah: sakramen?.nikah || false,
-              meninggal: sakramen?.meninggal || false,
-            },
-          },
-        },
-      });
-    });
-  }
+    async update(id, data) {
+        const {
+            nama, sektor_id, pendidikan_terakhir, pekerjaan,
+            kategorial, keterangan, sakramen,
+            jenis_kelamin, tempat_lahir, tanggal_lahir
+        } = data;
 
-  async update(id, data) {
-    const {
-      nama,
-      sektor_id,
-      pendidikan_terakhir,
-      pekerjaan,
-      kategorial,
-      keterangan,
-      sakramen,
-      jenis_kelamin,
-      tempat_lahir,
-      tanggal_lahir,
-    } = data;
+        const dataToUpdate = {
+            nama,
+            pendidikan_terakhir,
+            pekerjaan,
+            kategorial,
+            keterangan,
+            jenis_kelamin,
+            tempat_lahir,
+            tanggal_lahir: tanggal_lahir ? new Date(tanggal_lahir) : undefined
+        };
 
-    // Konversi sektor_id ke string jika frontend mengirim sebagai number
-    const sektorIdString = sektor_id
-      ? typeof sektor_id === "number"
-        ? String(sektor_id)
-        : sektor_id
-      : undefined;
+        if (sektor_id) dataToUpdate.sektor_id = String(sektor_id);
 
-    return prisma.$transaction(async (tx) => {
-      return tx.jemaat.update({
-        where: { id: id },
-        data: {
-          nama,
-          sektor_id: sektorIdString,
-          pendidikan_terakhir,
-          pekerjaan,
-          kategorial,
-          keterangan,
-          jenis_kelamin,
-          tempat_lahir,
-          tanggal_lahir: tanggal_lahir ? new Date(tanggal_lahir) : null,
-          jemaat_sakramen: {
-            upsert: {
-              create: {
-                bpts: sakramen?.bpts || false,
-                sidi: sakramen?.sidi || false,
-                nikah: sakramen?.nikah || false,
-                meninggal: sakramen?.meninggal || false,
-              },
-              update: {
-                bpts: sakramen?.bpts,
-                sidi: sakramen?.sidi,
-                nikah: sakramen?.nikah,
-                meninggal: sakramen?.meninggal,
-              },
-            },
-          },
-        },
-      });
-    });
-  }
+        return prisma.$transaction(async (tx) => {
+            return tx.jemaat.update({
+                where: { id },
+                data: {
+                    ...dataToUpdate,
+                    jemaat_sakramen: sakramen ? {
+                        upsert: {
+                            create: {
+                                bpts: !!sakramen.bpts,
+                                sidi: !!sakramen.sidi,
+                                nikah: !!sakramen.nikah,
+                                meninggal: !!sakramen.meninggal
+                            },
+                            update: {
+                                bpts: sakramen.bpts,
+                                sidi: sakramen.sidi,
+                                nikah: sakramen.nikah,
+                                meninggal: sakramen.meninggal
+                            }
+                        }
+                    } : undefined
+                }
+            });
+        });
+    }
 
-  async softDelete(id) {
-    return prisma.jemaat.update({
-      where: { id: id },
-      data: { deleted_at: new Date() },
-    });
-  }
+    async softDelete(id) {
+        return prisma.jemaat.update({
+            where: { id },
+            data: { deleted_at: new Date() }
+        });
+    }
 
-  async count(args = {}) {
-    return prisma.jemaat.count({
-      ...args,
-      where: {
-        ...args.where,
-        deleted_at: null,
-      },
-    });
-  }
+    async count(args = {}) {
+        return prisma.jemaat.count({
+            ...args,
+            where: {
+                ...args.where,
+                deleted_at: null
+            }
+        });
+    }
 
-  // Sector Methods
-  async findAllSectors() {
-    return prisma.sectors.findMany({
-      orderBy: { nama_sektor: "asc" },
-    });
-  }
+    async findAllSectors() {
+        return prisma.sectors.findMany({
+            orderBy: { nama_sektor: 'asc' }
+        });
+    }
 
-  async createSector(data) {
-    return prisma.sectors.create({ data });
-  }
+    async createSector(data) {
+        return prisma.sectors.create({ data });
+    }
 
-  async updateSector(id, data) {
-    return prisma.sectors.update({
-      where: { id: id },
-      data,
-    });
-  }
+    async updateSector(id, data) {
+        return prisma.sectors.update({
+            where: { id },
+            data
+        });
+    }
 
-  async deleteSector(id) {
-    return prisma.sectors.delete({
-      where: { id: id },
-    });
-  }
+    async deleteSector(id) {
+        return prisma.sectors.delete({
+            where: { id }
+        });
+    }
 }
 
 export default new JemaatRepository();
