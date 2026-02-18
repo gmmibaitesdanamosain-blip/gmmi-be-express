@@ -1,26 +1,16 @@
 import JemaatRepository from '../repositories/jemaat.repository.js';
 
 class JemaatService {
-    /**
-     * Memperbaiki error 500 dengan memastikan parameter kosong 
-     * tidak dikirim sebagai string ke Prisma.
-     */
     async getAllJemaat(filters = {}) {
         const { sektor_id, pendidikan, kategorial, search } = filters;
 
-        // Sanitasi: Jika string kosong, jadikan undefined agar diabaikan Prisma
-        const cleanFilters = {
-            sektor_id: sektor_id && sektor_id !== '' ? sektor_id : undefined,
-            pendidikan_terakhir: pendidikan && pendidikan !== '' ? pendidikan : undefined,
-            kategorial: kategorial && kategorial !== '' ? { contains: kategorial, mode: 'insensitive' } : undefined,
-            nama: search && search !== '' ? { contains: search, mode: 'insensitive' } : undefined
-        };
-
-        // Hapus key yang bernilai undefined
-        Object.keys(cleanFilters).forEach(key => cleanFilters[key] === undefined && delete cleanFilters[key]);
-
         return await JemaatRepository.findAll({
-            where: cleanFilters,
+            where: {
+                sektor_id: sektor_id || undefined,
+                pendidikan_terakhir: pendidikan || undefined,
+                kategorial: kategorial ? { contains: kategorial, mode: 'insensitive' } : undefined,
+                nama: search ? { contains: search, mode: 'insensitive' } : undefined
+            },
             include: {
                 sector: true,
                 jemaat_sakramen: true
@@ -28,11 +18,11 @@ class JemaatService {
         });
     }
 
-    async createJemaat(data) {
+    async createJemaat(data, userId, userName) {
         return await JemaatRepository.create(data);
     }
 
-    async updateJemaat(id, data) {
+    async updateJemaat(id, data, userId, userName) {
         return await JemaatRepository.update(id, data);
     }
 
@@ -40,6 +30,7 @@ class JemaatService {
         return await JemaatRepository.softDelete(id);
     }
 
+    // Sector Logic
     async getAllSectors() {
         return await JemaatRepository.findAllSectors();
     }
