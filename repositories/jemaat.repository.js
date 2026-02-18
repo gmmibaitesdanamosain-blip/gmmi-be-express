@@ -12,6 +12,16 @@ class JemaatRepository {
         });
     }
 
+    async findById(id) {
+        return prisma.jemaat.findUnique({
+            where: { id: id },
+            include: {
+                sector: true,
+                jemaat_sakramen: true
+            }
+        });
+    }
+
     async create(data) {
         const {
             nama, sektor_id, pendidikan_terakhir, pekerjaan,
@@ -19,14 +29,24 @@ class JemaatRepository {
             jenis_kelamin, tempat_lahir, tanggal_lahir
         } = data;
 
-        // Normalisasi ID Sektor
-        const sektorIdClean = String(sektor_id).trim();
+        // Validasi sektor_id
+        if (!sektor_id) {
+            throw new Error('Sektor wajib dipilih');
+        }
+
+        // Konversi sektor_id ke string jika frontend mengirim sebagai number
+        const sektorIdString = typeof sektor_id === 'number' ? String(sektor_id) : sektor_id;
+
+        // Validasi format sektor_id (harus string dan tidak kosong)
+        if (typeof sektorIdString !== 'string' || sektorIdString.trim() === '') {
+            throw new Error('Sektor ID tidak valid');
+        }
 
         return prisma.$transaction(async (tx) => {
             return tx.jemaat.create({
                 data: {
                     nama,
-                    sektor_id: sektorIdClean,
+                    sektor_id: sektorIdString,
                     pendidikan_terakhir,
                     pekerjaan,
                     kategorial,
@@ -36,10 +56,10 @@ class JemaatRepository {
                     tanggal_lahir: tanggal_lahir ? new Date(tanggal_lahir) : null,
                     jemaat_sakramen: {
                         create: {
-                            bpts: !!sakramen?.bpts,
-                            sidi: !!sakramen?.sidi,
-                            nikah: !!sakramen?.nikah,
-                            meninggal: !!sakramen?.meninggal
+                            bpts: sakramen?.bpts || false,
+                            sidi: sakramen?.sidi || false,
+                            nikah: sakramen?.nikah || false,
+                            meninggal: sakramen?.meninggal || false
                         }
                     }
                 }
@@ -54,40 +74,38 @@ class JemaatRepository {
             jenis_kelamin, tempat_lahir, tanggal_lahir
         } = data;
 
-        const dataToUpdate = {
-            nama,
-            pendidikan_terakhir,
-            pekerjaan,
-            kategorial,
-            keterangan,
-            jenis_kelamin,
-            tempat_lahir,
-            tanggal_lahir: tanggal_lahir ? new Date(tanggal_lahir) : undefined
-        };
-
-        if (sektor_id) dataToUpdate.sektor_id = String(sektor_id);
+        // Konversi sektor_id ke string jika frontend mengirim sebagai number
+        const sektorIdString = sektor_id ? (typeof sektor_id === 'number' ? String(sektor_id) : sektor_id) : undefined;
 
         return prisma.$transaction(async (tx) => {
             return tx.jemaat.update({
-                where: { id },
+                where: { id: id },
                 data: {
-                    ...dataToUpdate,
-                    jemaat_sakramen: sakramen ? {
+                    nama,
+                    sektor_id: sektorIdString,
+                    pendidikan_terakhir,
+                    pekerjaan,
+                    kategorial,
+                    keterangan,
+                    jenis_kelamin,
+                    tempat_lahir,
+                    tanggal_lahir: tanggal_lahir ? new Date(tanggal_lahir) : null,
+                    jemaat_sakramen: {
                         upsert: {
                             create: {
-                                bpts: !!sakramen.bpts,
-                                sidi: !!sakramen.sidi,
-                                nikah: !!sakramen.nikah,
-                                meninggal: !!sakramen.meninggal
+                                bpts: sakramen?.bpts || false,
+                                sidi: sakramen?.sidi || false,
+                                nikah: sakramen?.nikah || false,
+                                meninggal: sakramen?.meninggal || false
                             },
                             update: {
-                                bpts: sakramen.bpts,
-                                sidi: sakramen.sidi,
-                                nikah: sakramen.nikah,
-                                meninggal: sakramen.meninggal
+                                bpts: sakramen?.bpts,
+                                sidi: sakramen?.sidi,
+                                nikah: sakramen?.nikah,
+                                meninggal: sakramen?.meninggal
                             }
                         }
-                    } : undefined
+                    }
                 }
             });
         });
@@ -95,7 +113,7 @@ class JemaatRepository {
 
     async softDelete(id) {
         return prisma.jemaat.update({
-            where: { id },
+            where: { id: id },
             data: { deleted_at: new Date() }
         });
     }
@@ -110,6 +128,7 @@ class JemaatRepository {
         });
     }
 
+    // Sector Methods
     async findAllSectors() {
         return prisma.sectors.findMany({
             orderBy: { nama_sektor: 'asc' }
@@ -122,14 +141,14 @@ class JemaatRepository {
 
     async updateSector(id, data) {
         return prisma.sectors.update({
-            where: { id },
+            where: { id: id },
             data
         });
     }
 
     async deleteSector(id) {
         return prisma.sectors.delete({
-            where: { id }
+            where: { id: id }
         });
     }
 }
