@@ -13,7 +13,7 @@ class PewartaanRepository {
 
     async findById(id) {
         return prisma.pewartaan.findUnique({
-            where: { id: parseInt(id) },
+            where: { id },
             include: {
                 pewartaan_tata_ibadah: { orderBy: { urutan: 'asc' } },
                 pewartaan_pokok_doa: true,
@@ -64,7 +64,7 @@ class PewartaanRepository {
     }
 
     async update(id, data) {
-        const pewartaanId = parseInt(id);
+        const pewartaanId = id;
         const {
             judul, tanggal_ibadah, hari, tempat_jemaat, ayat_firman, tema_khotbah, status,
             tata_ibadah, pokok_doa, jemaat_ultah, jemaat_sakit, pemulihan, lansia,
@@ -113,12 +113,12 @@ class PewartaanRepository {
     }
 
     async delete(id) {
-        return prisma.pewartaan.delete({ where: { id: parseInt(id) } });
+        return prisma.pewartaan.delete({ where: { id } });
     }
 
     async updateStatus(id, status) {
         return prisma.pewartaan.update({
-            where: { id: parseInt(id) },
+            where: { id },
             data: { status }
         });
     }

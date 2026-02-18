@@ -10,7 +10,7 @@ class PekerjaanRepository {
 
     async findById(id) {
         return prisma.pekerjaan.findUnique({
-            where: { id: parseInt(id) },
+            where: { id },
             select: { id: true, nama_pekerjaan: true }
         });
     }
@@ -23,14 +23,14 @@ class PekerjaanRepository {
 
     async update(id, nama) {
         return prisma.pekerjaan.update({
-            where: { id: parseInt(id) },
+            where: { id },
             data: { nama_pekerjaan: nama.trim() }
         });
     }
 
     async delete(id) {
         return prisma.pekerjaan.delete({
-            where: { id: parseInt(id) }
+            where: { id }
         });
     }
 }

@@ -6,7 +6,7 @@ class ArsipRepository {
     }
 
     async findWarta(where, select) {
-        return prisma.warta.findMany({ where, select });
+        return prisma.warta_ibadah.findMany({ where, select });
     }
 
     async findAgenda(where, select) {

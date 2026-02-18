@@ -19,14 +19,14 @@ class PengumumanRepository {
 
     async update(id, data) {
         return prisma.announcements.update({
-            where: { id: parseInt(id) },
+            where: { id },
             data
         });
     }
 
     async delete(id) {
         return prisma.announcements.delete({
-            where: { id: parseInt(id) }
+            where: { id }
         });
     }
 

@@ -28,7 +28,7 @@ class IbadahRepository {
     async update(id, data) {
         const { judul, tanggal, waktu, lokasi, penanggung_jawab, status } = data;
         return prisma.agenda.update({
-            where: { id: parseInt(id) },
+            where: { id },
             data: {
                 kegiatan: judul,
                 tanggal: tanggal ? new Date(tanggal) : undefined,
@@ -42,7 +42,7 @@ class IbadahRepository {
 
     async delete(id) {
         return prisma.agenda.delete({
-            where: { id: parseInt(id) }
+            where: { id }
         });
     }
 

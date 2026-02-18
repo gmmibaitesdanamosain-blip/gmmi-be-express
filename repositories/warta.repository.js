@@ -2,7 +2,7 @@ import prisma from "../config/prisma.js";
 
 class WartaRepository {
   async create(data) {
-    return prisma.warta.create({
+    return prisma.warta_ibadah.create({
       data: {
         ...data,
         tanggal: data.tanggal ? new Date(data.tanggal) : new Date(),
@@ -12,8 +12,8 @@ class WartaRepository {
   }
 
   async update(id, data) {
-    return prisma.warta.update({
-      where: { id: parseInt(id) },
+    return prisma.warta_ibadah.update({
+      where: { id },
       data: {
         ...data,
         tanggal: data.tanggal ? new Date(data.tanggal) : undefined,
@@ -22,25 +22,25 @@ class WartaRepository {
   }
 
   async delete(id) {
-    return prisma.warta.delete({
-      where: { id: parseInt(id) },
+    return prisma.warta_ibadah.delete({
+      where: { id },
     });
   }
 
   async updateStatus(id, status) {
-    return prisma.warta.update({
-      where: { id: parseInt(id) },
+    return prisma.warta_ibadah.update({
+      where: { id },
       data: { status },
     });
   }
 
   async findMany(args) {
-    return prisma.warta.findMany(args);
+    return prisma.warta_ibadah.findMany(args);
   }
 
   async findById(id) {
-    return prisma.warta.findUnique({
-      where: { id: parseInt(id) },
+    return prisma.warta_ibadah.findUnique({
+      where: { id },
     });
   }
 }
