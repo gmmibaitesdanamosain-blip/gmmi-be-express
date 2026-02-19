@@ -102,21 +102,33 @@ class DashboardRepository {
         return prisma.arsip_bulanan.count();
     }
 
-    async getEducationStats() {
-        return prisma.jemaat.groupBy({
-            by: ['sektor_id', 'pendidikan_terakhir'],
-            where: { deleted_at: null },
-            _count: { _all: true },
-        });
-    }
+   async getEducationStats() {
+    const data = await prisma.jemaat.groupBy({
+        by: ['sektor_id', 'pendidikan_terakhir'],
+        where: { deleted_at: null },
+        _count: { _all: true },
+    });
+    const sectorsMap = await this.getSectorsMap();
+    return data.map(item => ({
+        sector: sectorsMap[item.sektor_id] || 'Unknown',
+        education: item.pendidikan_terakhir,
+        count: item._count._all,
+    }));
+}
 
-    async getKategorialStats() {
-        return prisma.jemaat.groupBy({
-            by: ['sektor_id', 'kategorial'],
-            where: { deleted_at: null },
-            _count: { _all: true },
-        });
-    }
+async getKategorialStats() {
+    const data = await prisma.jemaat.groupBy({
+        by: ['sektor_id', 'kategorial'],
+        where: { deleted_at: null },
+        _count: { _all: true },
+    });
+    const sectorsMap = await this.getSectorsMap();
+    return data.map(item => ({
+        sector: sectorsMap[item.sektor_id] || 'Unknown',
+        category: item.kategorial,
+        count: item._count._all,
+    }));
+}
 
     async getSakramenStats() {
         const sakramen = await prisma.jemaat_sakramen.findMany({
