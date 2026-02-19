@@ -29,17 +29,25 @@ class AdminService {
         const today = new Date();
         const counts = await DashboardRepository.getCounts();
         const finance = await DashboardRepository.getFinanceSummary();
+        const sectorsList = await DashboardRepository.getSectorsList();
+        const educationStats = await DashboardRepository.getEducationStats();
+        const kategorialStats = await DashboardRepository.getKategorialStats();
+        const sakramenStats = await DashboardRepository.getSakramenStats();
 
         return {
-            totalJemaat: counts.jemaat,
-            totalSectors: counts.sectors,
-            totalAdmins: counts.admins,
-            activePewartaan: counts.pewartaanApproved,
-            totalWarta: counts.pewartaanTotal,
-            income: finance.income,
-            expense: finance.expense,
-            balance: finance.income - finance.expense,
-            lastUpdate: today.toLocaleDateString('id-ID')
+        totalJemaat: counts.jemaat,
+        totalSectors: counts.sectors,
+        totalAdmins: counts.admins,
+        activePewartaan: counts.pewartaanApproved,
+        totalWarta: counts.pewartaanTotal,
+        income: finance.income,
+        expense: finance.expense,
+        balance: finance.income - finance.expense,
+        lastUpdate: today.toLocaleDateString('id-ID'), // ← ada koma di sini
+        sectorsList,
+        educationStats,
+        kategorialStats,
+        sakramenStats,
         };
     }
 
