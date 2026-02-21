@@ -9,11 +9,9 @@ class PewartaanController {
             console.log('[POST /api/pewartaan] User:', req.user);
             console.log('[POST /api/pewartaan] Request body keys:', Object.keys(req.body));
 
-            // Validasi required fields
             const { judul, tanggal_ibadah } = req.body;
 
             if (!judul || judul.trim() === '') {
-                console.error('[POST /api/pewartaan] Validation error: judul is required');
                 return res.status(400).json({
                     success: false,
                     message: 'Judul warta wajib diisi'
@@ -21,7 +19,6 @@ class PewartaanController {
             }
 
             if (!tanggal_ibadah) {
-                console.error('[POST /api/pewartaan] Validation error: tanggal_ibadah is required');
                 return res.status(400).json({
                     success: false,
                     message: 'Tanggal ibadah wajib diisi'
@@ -33,7 +30,6 @@ class PewartaanController {
             console.log('[POST /api/pewartaan] Pewartaan created with ID:', result.id);
 
             if (req.body.status === 'approved') {
-                console.log('[POST /api/pewartaan] Triggering notifications...');
                 await this.triggerNotifications(result.id);
             }
 
@@ -43,14 +39,13 @@ class PewartaanController {
                 id: result.id
             });
         } catch (error) {
-    catch (error) {
-    console.error('[POST /api/pewartaan] Error:', error);
-    console.error('[POST /api/pewartaan] Error stack:', error.stack);
-    res.status(500).json({
-        success: false,
-        message: 'Gagal membuat pewartaan',
-        error: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+            console.error('[POST /api/pewartaan] Error:', error);
+            console.error('[POST /api/pewartaan] Error stack:', error.stack);
+            res.status(500).json({
+                success: false,
+                message: 'Gagal membuat pewartaan',
+                error: error.message  // selalu tampilkan untuk debug
+            });
         }
     }
 
@@ -66,7 +61,11 @@ class PewartaanController {
             res.json({ success: true, message: 'Pewartaan berhasil diperbarui' });
         } catch (error) {
             console.error('Error in PewartaanController.update:', error);
-            res.status(500).json({ success: false, message: 'Gagal memperbarui pewartaan', error: error.message });
+            res.status(500).json({
+                success: false,
+                message: 'Gagal memperbarui pewartaan',
+                error: error.message
+            });
         }
     }
 
@@ -76,7 +75,7 @@ class PewartaanController {
             res.json({ success: true, data });
         } catch (error) {
             console.error('Error in PewartaanController.getAll:', error);
-            res.status(500).json({ success: false, message: 'Gagal mengambil data' });
+            res.status(500).json({ success: false, message: 'Gagal mengambil data', error: error.message });
         }
     }
 
@@ -87,7 +86,7 @@ class PewartaanController {
             res.json({ success: true, data });
         } catch (error) {
             console.error('Error in PewartaanController.getById:', error);
-            res.status(500).json({ success: false, message: 'Gagal mengambil detail pewartaan' });
+            res.status(500).json({ success: false, message: 'Gagal mengambil detail pewartaan', error: error.message });
         }
     }
 
@@ -97,7 +96,7 @@ class PewartaanController {
             res.json({ success: true, message: 'Pewartaan berhasil dihapus' });
         } catch (error) {
             console.error('Error in PewartaanController.delete:', error);
-            res.status(500).json({ success: false, message: 'Gagal menghapus pewartaan' });
+            res.status(500).json({ success: false, message: 'Gagal menghapus pewartaan', error: error.message });
         }
     }
 
@@ -158,15 +157,15 @@ class PewartaanController {
             res.json({ success: true, message: `Status pewartaan berhasil diubah menjadi ${status}`, data });
         } catch (error) {
             console.error('Error in PewartaanController.updateStatus:', error);
-            res.status(500).json({ success: false, message: 'Gagal memperbarui status pewartaan' });
+            res.status(500).json({ success: false, message: 'Gagal memperbarui status pewartaan', error: error.message });
         }
     }
 
     async triggerNotifications(pewartaanId) {
         try {
             const data = await PewartaanService.getById(pewartaanId);
-            if (data && data.pewartaan_pelayanan_sektor.length > 0) {
-                for (const sektor of data.pewartaan_pelayanan_sektor) {
+            if (data && data.pelayanan_sektor && data.pelayanan_sektor.length > 0) {
+                for (const sektor of data.pelayanan_sektor) {
                     if (sektor.nomor_hp) {
                         await notificationService.sendWartaSektorNotification(sektor.nomor_hp, {
                             nomor_sektor: sektor.nomor_sektor,
