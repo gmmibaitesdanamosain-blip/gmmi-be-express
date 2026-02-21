@@ -121,4 +121,3 @@ class WartaController {
 }
 export default new WartaController();
 
-pewartaan.controllers.js
