@@ -51,8 +51,6 @@ class PewartaanController {
         message: 'Gagal membuat pewartaan',
         error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
-}
-
         }
     }
 
