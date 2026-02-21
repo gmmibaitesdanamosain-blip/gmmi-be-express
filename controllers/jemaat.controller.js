@@ -3,8 +3,7 @@ import { logActivity } from '../utils/activityLogger.js';
 
 class JemaatController {
     static VALID_PEKERJAAN = [
-        'Buruh', 'Petani', 'Nelayan', 'PNS', 'TNI / POLRI',
-        'Guru / Dosen', 'Tenaga Kesehatan', 'Rohaniawan', 'Lainnya'
+        'Buruh', 'Petani', 'Nelayan', 'PNS', 'TNI / POLRI', 'Guru / Dosen', 'Tenaga Kesehatan', 'Rohaniawan', 'Mahasiswa/Pelajar', 'Wiraswasta', 'Karyawan Swasta', 'Pegawai BUMN', 'Lainnya'
     ];
 
     async getAll(req, res) {
