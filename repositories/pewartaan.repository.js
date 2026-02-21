@@ -44,33 +44,26 @@ class PewartaanRepository {
                 ayat_firman,
                 tema_khotbah,
                 status: status || 'draft',
-                tata_ibadah: tata_ibadah?.length ? { create: tata_ibadah } : undefined,
-                pokok_doa: pokok_doa?.length ? { create: pokok_doa } : undefined,
-                jemaat_ultah: jemaat_ultah?.length ? {
+                tata_ibadah: tata_ibadah ? { create: tata_ibadah } : undefined,
+                pokok_doa: pokok_doa ? { create: pokok_doa } : undefined,
+                jemaat_ultah: jemaat_ultah ? {
                     create: jemaat_ultah.map(u => ({ ...u, tanggal: new Date(u.tanggal) }))
                 } : undefined,
-                jemaat_sakit: jemaat_sakit?.length ? { create: jemaat_sakit } : undefined,
-                pemulihan: pemulihan?.length ? { create: pemulihan } : undefined,
-                lansia: lansia?.length ? { create: lansia } : undefined,
-                info_ibadah: info_ibadah?.length ? {
+                jemaat_sakit: jemaat_sakit ? { create: jemaat_sakit } : undefined,
+                pemulihan: pemulihan ? { create: pemulihan } : undefined,
+                lansia: lansia ? { create: lansia } : undefined,
+                info_ibadah: info_ibadah ? {
                     create: info_ibadah.map(i => ({ ...i, tanggal: new Date(i.tanggal) }))
                 } : undefined,
-                pelayanan_sektor: pelayanan_sektor?.length ? { create: pelayanan_sektor } : undefined,
-                pelayanan_kategorial: pelayanan_kategorial?.length ? {
-                    create: pelayanan_kategorial
+                pelayanan_sektor: pelayanan_sektor ? { create: pelayanan_sektor } : undefined,
+                pelayanan_kategorial: pelayanan_kategorial ? {
+                    create: pelayanan_kategorial.map(p => ({ ...p }))
                 } : undefined
             }
         });
     }
 
     async update(id, data) {
-        // ✅ FIX: destructure data terlebih dahulu
-        const {
-            judul, tanggal_ibadah, hari, tempat_jemaat, ayat_firman, tema_khotbah, status,
-            tata_ibadah, pokok_doa, jemaat_ultah, jemaat_sakit, pemulihan, lansia,
-            info_ibadah, pelayanan_sektor, pelayanan_kategorial
-        } = data;
-
         return prisma.$transaction(async (tx) => {
             const schemaTables = [
                 'pewartaan_tata_ibadah', 'pewartaan_pokok_doa', 'pewartaan_jemaat_ultah',
@@ -92,20 +85,20 @@ class PewartaanRepository {
                     ayat_firman,
                     tema_khotbah,
                     status,
-                    tata_ibadah: tata_ibadah?.length ? { create: tata_ibadah } : undefined,
-                    pokok_doa: pokok_doa?.length ? { create: pokok_doa } : undefined,
-                    jemaat_ultah: jemaat_ultah?.length ? {
+                    tata_ibadah: tata_ibadah ? { create: tata_ibadah } : undefined,
+                    pokok_doa: pokok_doa ? { create: pokok_doa } : undefined,
+                    jemaat_ultah: jemaat_ultah ? {
                         create: jemaat_ultah.map(u => ({ ...u, tanggal: new Date(u.tanggal) }))
                     } : undefined,
-                    jemaat_sakit: jemaat_sakit?.length ? { create: jemaat_sakit } : undefined,
-                    pemulihan: pemulihan?.length ? { create: pemulihan } : undefined,
-                    lansia: lansia?.length ? { create: lansia } : undefined,
-                    info_ibadah: info_ibadah?.length ? {
+                    jemaat_sakit: jemaat_sakit ? { create: jemaat_sakit } : undefined,
+                    pemulihan: pemulihan ? { create: pemulihan } : undefined,
+                    lansia: lansia ? { create: lansia } : undefined,
+                    info_ibadah: info_ibadah ? {
                         create: info_ibadah.map(i => ({ ...i, tanggal: new Date(i.tanggal) }))
                     } : undefined,
-                    pelayanan_sektor: pelayanan_sektor?.length ? { create: pelayanan_sektor } : undefined,
-                    pelayanan_kategorial: pelayanan_kategorial?.length ? {
-                        create: pelayanan_kategorial
+                    pelayanan_sektor: pelayanan_sektor ? { create: pelayanan_sektor } : undefined,
+                    pelayanan_kategorial: pelayanan_kategorial ? {
+                        create: pelayanan_kategorial.map(p => ({ ...p }))
                     } : undefined
                 }
             });
