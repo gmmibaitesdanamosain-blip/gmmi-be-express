@@ -47,7 +47,7 @@ class PewartaanRepository {
 
                 tata_ibadah: Array.isArray(tata_ibadah) && tata_ibadah.length > 0
                     ? { create: tata_ibadah.map(t => ({
-                        urutan: t.urutan ?? null,
+                        urutan: t.urutan ? parseInt(t.urutan) : null,  // ← ubah ini
                         nama_bagian: t.nama_bagian || null,
                         keterangan: t.keterangan || null,
                         judul_pujian: t.judul_pujian || null,
