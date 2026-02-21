@@ -43,13 +43,13 @@ class PewartaanController {
                 id: result.id
             });
         } catch (error) {
-            console.error('[POST /api/pewartaan] Error:', error);
-            console.error('[POST /api/pewartaan] Error stack:', error.stack);
-            res.status(500).json({
-                success: false,
-                message: 'Gagal membuat pewartaan',
-                error: process.env.NODE_ENV === 'development' ? error.message : undefined
-            });
+    console.error('[POST /api/pewartaan] Error:', error);
+    res.status(500).json({
+        success: false,
+        message: 'Gagal membuat pewartaan',
+        error: error.message  // ← hapus kondisi NODE_ENV, tampilkan selalu sementara
+    });
+}
         }
     }
 
