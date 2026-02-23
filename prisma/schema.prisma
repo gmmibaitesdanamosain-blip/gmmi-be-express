@@ -1,3 +1,4 @@
+
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -160,9 +161,9 @@ model jemaat {
   nama                String    @db.VarChar(150)
   tanggal_lahir       DateTime? @db.Date
   jenis_kelamin       String?   @db.Char(1)
-  pendidikan_terakhir String?   @db.VarChar(10)
+  pendidikan_terakhir String?   @db.VarChar(30)
   kategorial          String?   @db.VarChar(20)
-  sektor_id           String    @db.VarChar(50)
+  sektor_id           String
   keterangan          String?   @db.Text
   created_at          DateTime? @default(now()) @db.Timestamp(6)
   deleted_at          DateTime? @db.Timestamp(6)
@@ -171,6 +172,7 @@ model jemaat {
   pekerjaan           String?   @db.VarChar(30)
 
   // Relations
+  sector          sectors          @relation(fields: [sektor_id], references: [id], onDelete: Cascade)
   pekerjaan_ref   pekerjaan?       @relation(fields: [pekerjaan_id], references: [id])
   jemaat_sakramen jemaat_sakramen?
   jemaat_history  jemaat_history[]
@@ -272,8 +274,6 @@ model pengumuman {
   user users? @relation(fields: [created_by], references: [id])
 }
 
-// ==================== PEWARTAAN ====================
-
 model pewartaan {
   id             String    @id @default(dbgenerated("'pwt_' || replace(gen_random_uuid()::text, '-', '')"))
   judul          String    @db.VarChar(255)
@@ -283,15 +283,126 @@ model pewartaan {
   ayat_firman    String?   @db.Text
   tema_khotbah   String?   @db.VarChar(255)
   status         String?   @default("draft") @db.VarChar(50)
-
-  // File storage (Appwrite)
   file_word_url  String?   @db.Text
   file_word_id   String?   @db.VarChar(255)
   file_pdf_url   String?   @db.Text
   file_pdf_id    String?   @db.VarChar(255)
-
   created_at     DateTime? @default(now()) @db.Timestamp(6)
   updated_at     DateTime? @default(now()) @db.Timestamp(6)
+
+  // Relations
+  tata_ibadah          pewartaan_tata_ibadah[]
+  pokok_doa            pewartaan_pokok_doa[]
+  jemaat_ultah         pewartaan_jemaat_ultah[]
+  jemaat_sakit         pewartaan_jemaat_sakit[]
+  pemulihan            pewartaan_pemulihan[]
+  lansia               pewartaan_lansia[]
+  info_ibadah          pewartaan_info_ibadah[]
+  pelayanan_sektor     pewartaan_pelayanan_sektor[]
+  pelayanan_kategorial pewartaan_pelayanan_kategorial[]
+}
+
+model pewartaan_tata_ibadah {
+  id           String  @id @default(dbgenerated("'pti_' || replace(gen_random_uuid()::text, '-', '')"))
+  pewartaan_id String?
+  urutan       Int?
+  nama_bagian  String? @db.VarChar(255)
+  keterangan   String? @db.Text
+  judul_pujian String? @db.VarChar(255)
+  isi_konten   String? @db.Text
+
+  // Relations
+  pewartaan pewartaan? @relation(fields: [pewartaan_id], references: [id], onDelete: Cascade)
+}
+
+model pewartaan_pokok_doa {
+  id           String  @id @default(dbgenerated("'ppd_' || replace(gen_random_uuid()::text, '-', '')"))
+  pewartaan_id String?
+  kategori     String? @db.VarChar(255)
+  keterangan   String? @db.Text
+
+  // Relations
+  pewartaan pewartaan? @relation(fields: [pewartaan_id], references: [id], onDelete: Cascade)
+}
+
+model pewartaan_jemaat_ultah {
+  id           String    @id @default(dbgenerated("'pju_' || replace(gen_random_uuid()::text, '-', '')"))
+  pewartaan_id String?
+  tanggal      DateTime? @db.Date
+  nama_jemaat  String?   @db.VarChar(255)
+  keterangan   String?   @db.Text
+
+  // Relations
+  pewartaan pewartaan? @relation(fields: [pewartaan_id], references: [id], onDelete: Cascade)
+}
+
+model pewartaan_jemaat_sakit {
+  id           String  @id @default(dbgenerated("'pjs_' || replace(gen_random_uuid()::text, '-', '')"))
+  pewartaan_id String?
+  nama_jemaat  String? @db.VarChar(255)
+  keterangan   String? @db.Text
+
+  // Relations
+  pewartaan pewartaan? @relation(fields: [pewartaan_id], references: [id], onDelete: Cascade)
+}
+
+model pewartaan_pemulihan {
+  id           String  @id @default(dbgenerated("'ppm_' || replace(gen_random_uuid()::text, '-', '')"))
+  pewartaan_id String?
+  nama_jemaat  String? @db.VarChar(255)
+  keterangan   String? @db.Text
+
+  // Relations
+  pewartaan pewartaan? @relation(fields: [pewartaan_id], references: [id], onDelete: Cascade)
+}
+
+model pewartaan_lansia {
+  id           String  @id @default(dbgenerated("'pla_' || replace(gen_random_uuid()::text, '-', '')"))
+  pewartaan_id String?
+  nama_jemaat  String? @db.VarChar(255)
+  keterangan   String? @db.Text
+
+  // Relations
+  pewartaan pewartaan? @relation(fields: [pewartaan_id], references: [id], onDelete: Cascade)
+}
+
+model pewartaan_info_ibadah {
+  id           String    @id @default(dbgenerated("'pii_' || replace(gen_random_uuid()::text, '-', '')"))
+  pewartaan_id String?
+  tanggal      DateTime? @db.Date
+  jam          String?   @db.VarChar(50)
+  jenis_ibadah String?   @db.VarChar(255)
+  pemimpin     String?   @db.VarChar(255)
+  sektor       String?   @db.VarChar(100)
+
+  // Relations
+  pewartaan pewartaan? @relation(fields: [pewartaan_id], references: [id], onDelete: Cascade)
+}
+
+model pewartaan_pelayanan_sektor {
+  id           String  @id @default(dbgenerated("'pps_' || replace(gen_random_uuid()::text, '-', '')"))
+  pewartaan_id String?
+  nomor_sektor String? @db.VarChar(50)
+  tempat       String? @db.VarChar(255)
+  pemimpin     String? @db.VarChar(255)
+  liturgos     String? @db.VarChar(255)
+  nomor_hp     String? @db.VarChar(50)
+
+  // Relations
+  pewartaan pewartaan? @relation(fields: [pewartaan_id], references: [id], onDelete: Cascade)
+}
+
+model pewartaan_pelayanan_kategorial {
+  id                 String  @id @default(dbgenerated("'ppk_' || replace(gen_random_uuid()::text, '-', '')"))
+  pewartaan_id       String?
+  tanggal_waktu      String? @db.VarChar(100)
+  kategori_pelayanan String? @db.VarChar(255)
+  tempat             String? @db.VarChar(255)
+  pemimpin           String? @db.VarChar(255)
+  liturgos_petugas   String? @db.VarChar(255)
+
+  // Relations
+  pewartaan pewartaan? @relation(fields: [pewartaan_id], references: [id], onDelete: Cascade)
 }
 
 model program_kegiatan_gereja {
@@ -323,6 +434,9 @@ model sectors {
   alamat      String?   @db.Text
   no_hp       String    @db.VarChar(20)
   created_at  DateTime? @default(now()) @db.Timestamp(6)
+
+  // Relations
+  jemaat jemaat[]
 }
 
 model sejarah {
