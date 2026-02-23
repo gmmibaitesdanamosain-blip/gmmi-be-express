@@ -1,18 +1,42 @@
 import express from 'express';
+import multer from 'multer';
 import PewartaanController from '../controllers/pewartaan.controller.js';
 import { authenticateToken } from '../middlewares/auth.middleware.js';
-import { isSuperAdmin, isAdmin } from '../middlewares/role.middleware.js';
+import { isAdmin } from '../middlewares/role.middleware.js';
+
 const router = express.Router();
-// Public / Auth Member (can be read by all authenticated users if needed, or just admin)
+
+// Multer config - memory storage untuk Appwrite
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 20 * 1024 * 1024 }, // 20MB max
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = [
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ];
+        if (allowedTypes.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error('Hanya file PDF dan Word (.doc, .docx) yang diizinkan'));
+        }
+    }
+});
+
+const uploadFields = upload.fields([
+    { name: 'file_word', maxCount: 1 },
+    { name: 'file_pdf', maxCount: 1 }
+]);
+
+// Public
 router.get('/', authenticateToken, PewartaanController.getAll);
 router.get('/:id', authenticateToken, PewartaanController.getById);
-// Export (Direct Link)
-router.get('/:id/export/excel', authenticateToken, PewartaanController.exportExcel);
-router.get('/:id/export/word', authenticateToken, PewartaanController.exportWord);
-// Admin and Super Admin
-router.post('/', authenticateToken, isAdmin, PewartaanController.create);
-router.put('/:id', authenticateToken, isAdmin, PewartaanController.update);
-router.delete('/:id', authenticateToken, isAdmin, PewartaanController.delete);
-router.patch('/:id/status', authenticateToken, isAdmin, PewartaanController.updateStatus);
-export default router;
 
+// Admin & Super Admin
+router.post('/', authenticateToken, isAdmin, uploadFields, PewartaanController.create);
+router.put('/:id', authenticateToken, isAdmin, uploadFields, PewartaanController.update);
+router.patch('/:id/status', authenticateToken, isAdmin, PewartaanController.updateStatus);
+router.delete('/:id', authenticateToken, isAdmin, PewartaanController.delete);
+
+export default router;
