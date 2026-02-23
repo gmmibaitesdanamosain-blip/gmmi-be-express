@@ -9,7 +9,7 @@ const router = express.Router();
 // Multer config - memory storage untuk Appwrite
 const upload = multer({
     storage: multer.memoryStorage(),
-    limits: { fileSize: 20 * 1024 * 1024 }, // 20MB max
+   limits: { fileSize: 4 * 1024 * 1024 }
     fileFilter: (req, file, cb) => {
         const allowedTypes = [
             'application/pdf',
