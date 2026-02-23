@@ -272,6 +272,8 @@ model pengumuman {
   user users? @relation(fields: [created_by], references: [id])
 }
 
+// ==================== PEWARTAAN ====================
+
 model pewartaan {
   id             String    @id @default(dbgenerated("'pwt_' || replace(gen_random_uuid()::text, '-', '')"))
   judul          String    @db.VarChar(255)
