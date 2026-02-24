@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+     "build": "prisma generate && tsc",
     "test:db": "node --experimental-strip-types test-db-connection.js",
     "test:mysql": "node test-mysql-connection.js",
     "build": "prisma generate",
