@@ -4,12 +4,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-   "scripts": {
-  "build": "prisma generate",
-  "dev": "nodemon index.js",
-  "start": "node index.js",
-  "vercel-build": "prisma generate"
-}
+    "build": "prisma generate",
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "vercel-build": "prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -36,8 +34,5 @@
     "eslint": "^10.0.0",
     "globals": "^17.3.0",
     "nodemon": "^3.1.11"
-  },
-  "prisma": {
-    "seed": ""
   }
 }
