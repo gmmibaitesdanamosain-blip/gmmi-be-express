@@ -94,8 +94,4 @@ app.use("/api/jemaat", jemaatRoutes);
 app.use("/api/pekerjaan", pekerjaanRoutes);
 app.use("/api/sejarah", sejarahRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
 export default app;
