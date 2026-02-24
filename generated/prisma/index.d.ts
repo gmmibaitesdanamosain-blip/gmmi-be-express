@@ -25271,6 +25271,10 @@ export namespace Prisma {
     ayat_firman: string | null
     tema_khotbah: string | null
     status: string | null
+    file_word_url: string | null
+    file_word_id: string | null
+    file_pdf_url: string | null
+    file_pdf_id: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -25284,6 +25288,10 @@ export namespace Prisma {
     ayat_firman: string | null
     tema_khotbah: string | null
     status: string | null
+    file_word_url: string | null
+    file_word_id: string | null
+    file_pdf_url: string | null
+    file_pdf_id: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -25297,6 +25305,10 @@ export namespace Prisma {
     ayat_firman: number
     tema_khotbah: number
     status: number
+    file_word_url: number
+    file_word_id: number
+    file_pdf_url: number
+    file_pdf_id: number
     created_at: number
     updated_at: number
     _all: number
@@ -25312,6 +25324,10 @@ export namespace Prisma {
     ayat_firman?: true
     tema_khotbah?: true
     status?: true
+    file_word_url?: true
+    file_word_id?: true
+    file_pdf_url?: true
+    file_pdf_id?: true
     created_at?: true
     updated_at?: true
   }
@@ -25325,6 +25341,10 @@ export namespace Prisma {
     ayat_firman?: true
     tema_khotbah?: true
     status?: true
+    file_word_url?: true
+    file_word_id?: true
+    file_pdf_url?: true
+    file_pdf_id?: true
     created_at?: true
     updated_at?: true
   }
@@ -25338,6 +25358,10 @@ export namespace Prisma {
     ayat_firman?: true
     tema_khotbah?: true
     status?: true
+    file_word_url?: true
+    file_word_id?: true
+    file_pdf_url?: true
+    file_pdf_id?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -25424,6 +25448,10 @@ export namespace Prisma {
     ayat_firman: string | null
     tema_khotbah: string | null
     status: string | null
+    file_word_url: string | null
+    file_word_id: string | null
+    file_pdf_url: string | null
+    file_pdf_id: string | null
     created_at: Date | null
     updated_at: Date | null
     _count: PewartaanCountAggregateOutputType | null
@@ -25454,6 +25482,10 @@ export namespace Prisma {
     ayat_firman?: boolean
     tema_khotbah?: boolean
     status?: boolean
+    file_word_url?: boolean
+    file_word_id?: boolean
+    file_pdf_url?: boolean
+    file_pdf_id?: boolean
     created_at?: boolean
     updated_at?: boolean
     tata_ibadah?: boolean | pewartaan$tata_ibadahArgs<ExtArgs>
@@ -25477,6 +25509,10 @@ export namespace Prisma {
     ayat_firman?: boolean
     tema_khotbah?: boolean
     status?: boolean
+    file_word_url?: boolean
+    file_word_id?: boolean
+    file_pdf_url?: boolean
+    file_pdf_id?: boolean
     created_at?: boolean
     updated_at?: boolean
   }, ExtArgs["result"]["pewartaan"]>
@@ -25490,6 +25526,10 @@ export namespace Prisma {
     ayat_firman?: boolean
     tema_khotbah?: boolean
     status?: boolean
+    file_word_url?: boolean
+    file_word_id?: boolean
+    file_pdf_url?: boolean
+    file_pdf_id?: boolean
     created_at?: boolean
     updated_at?: boolean
   }, ExtArgs["result"]["pewartaan"]>
@@ -25503,11 +25543,15 @@ export namespace Prisma {
     ayat_firman?: boolean
     tema_khotbah?: boolean
     status?: boolean
+    file_word_url?: boolean
+    file_word_id?: boolean
+    file_pdf_url?: boolean
+    file_pdf_id?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type pewartaanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "judul" | "tanggal_ibadah" | "hari" | "tempat_jemaat" | "ayat_firman" | "tema_khotbah" | "status" | "created_at" | "updated_at", ExtArgs["result"]["pewartaan"]>
+  export type pewartaanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "judul" | "tanggal_ibadah" | "hari" | "tempat_jemaat" | "ayat_firman" | "tema_khotbah" | "status" | "file_word_url" | "file_word_id" | "file_pdf_url" | "file_pdf_id" | "created_at" | "updated_at", ExtArgs["result"]["pewartaan"]>
   export type pewartaanInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tata_ibadah?: boolean | pewartaan$tata_ibadahArgs<ExtArgs>
     pokok_doa?: boolean | pewartaan$pokok_doaArgs<ExtArgs>
@@ -25545,6 +25589,10 @@ export namespace Prisma {
       ayat_firman: string | null
       tema_khotbah: string | null
       status: string | null
+      file_word_url: string | null
+      file_word_id: string | null
+      file_pdf_url: string | null
+      file_pdf_id: string | null
       created_at: Date | null
       updated_at: Date | null
     }, ExtArgs["result"]["pewartaan"]>
@@ -25987,6 +26035,10 @@ export namespace Prisma {
     readonly ayat_firman: FieldRef<"pewartaan", 'String'>
     readonly tema_khotbah: FieldRef<"pewartaan", 'String'>
     readonly status: FieldRef<"pewartaan", 'String'>
+    readonly file_word_url: FieldRef<"pewartaan", 'String'>
+    readonly file_word_id: FieldRef<"pewartaan", 'String'>
+    readonly file_pdf_url: FieldRef<"pewartaan", 'String'>
+    readonly file_pdf_id: FieldRef<"pewartaan", 'String'>
     readonly created_at: FieldRef<"pewartaan", 'DateTime'>
     readonly updated_at: FieldRef<"pewartaan", 'DateTime'>
   }
@@ -53088,6 +53140,10 @@ export namespace Prisma {
     ayat_firman: 'ayat_firman',
     tema_khotbah: 'tema_khotbah',
     status: 'status',
+    file_word_url: 'file_word_url',
+    file_word_id: 'file_word_id',
+    file_pdf_url: 'file_pdf_url',
+    file_pdf_id: 'file_pdf_id',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -54807,6 +54863,10 @@ export namespace Prisma {
     ayat_firman?: StringNullableFilter<"pewartaan"> | string | null
     tema_khotbah?: StringNullableFilter<"pewartaan"> | string | null
     status?: StringNullableFilter<"pewartaan"> | string | null
+    file_word_url?: StringNullableFilter<"pewartaan"> | string | null
+    file_word_id?: StringNullableFilter<"pewartaan"> | string | null
+    file_pdf_url?: StringNullableFilter<"pewartaan"> | string | null
+    file_pdf_id?: StringNullableFilter<"pewartaan"> | string | null
     created_at?: DateTimeNullableFilter<"pewartaan"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"pewartaan"> | Date | string | null
     tata_ibadah?: Pewartaan_tata_ibadahListRelationFilter
@@ -54829,6 +54889,10 @@ export namespace Prisma {
     ayat_firman?: SortOrderInput | SortOrder
     tema_khotbah?: SortOrderInput | SortOrder
     status?: SortOrderInput | SortOrder
+    file_word_url?: SortOrderInput | SortOrder
+    file_word_id?: SortOrderInput | SortOrder
+    file_pdf_url?: SortOrderInput | SortOrder
+    file_pdf_id?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
     tata_ibadah?: pewartaan_tata_ibadahOrderByRelationAggregateInput
@@ -54854,6 +54918,10 @@ export namespace Prisma {
     ayat_firman?: StringNullableFilter<"pewartaan"> | string | null
     tema_khotbah?: StringNullableFilter<"pewartaan"> | string | null
     status?: StringNullableFilter<"pewartaan"> | string | null
+    file_word_url?: StringNullableFilter<"pewartaan"> | string | null
+    file_word_id?: StringNullableFilter<"pewartaan"> | string | null
+    file_pdf_url?: StringNullableFilter<"pewartaan"> | string | null
+    file_pdf_id?: StringNullableFilter<"pewartaan"> | string | null
     created_at?: DateTimeNullableFilter<"pewartaan"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"pewartaan"> | Date | string | null
     tata_ibadah?: Pewartaan_tata_ibadahListRelationFilter
@@ -54876,6 +54944,10 @@ export namespace Prisma {
     ayat_firman?: SortOrderInput | SortOrder
     tema_khotbah?: SortOrderInput | SortOrder
     status?: SortOrderInput | SortOrder
+    file_word_url?: SortOrderInput | SortOrder
+    file_word_id?: SortOrderInput | SortOrder
+    file_pdf_url?: SortOrderInput | SortOrder
+    file_pdf_id?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
     _count?: pewartaanCountOrderByAggregateInput
@@ -54895,6 +54967,10 @@ export namespace Prisma {
     ayat_firman?: StringNullableWithAggregatesFilter<"pewartaan"> | string | null
     tema_khotbah?: StringNullableWithAggregatesFilter<"pewartaan"> | string | null
     status?: StringNullableWithAggregatesFilter<"pewartaan"> | string | null
+    file_word_url?: StringNullableWithAggregatesFilter<"pewartaan"> | string | null
+    file_word_id?: StringNullableWithAggregatesFilter<"pewartaan"> | string | null
+    file_pdf_url?: StringNullableWithAggregatesFilter<"pewartaan"> | string | null
+    file_pdf_id?: StringNullableWithAggregatesFilter<"pewartaan"> | string | null
     created_at?: DateTimeNullableWithAggregatesFilter<"pewartaan"> | Date | string | null
     updated_at?: DateTimeNullableWithAggregatesFilter<"pewartaan"> | Date | string | null
   }
@@ -57764,6 +57840,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahCreateNestedManyWithoutPewartaanInput
@@ -57786,6 +57866,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUncheckedCreateNestedManyWithoutPewartaanInput
@@ -57808,6 +57892,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUpdateManyWithoutPewartaanNestedInput
@@ -57830,6 +57918,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUncheckedUpdateManyWithoutPewartaanNestedInput
@@ -57852,6 +57944,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
   }
@@ -57865,6 +57961,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -57878,6 +57978,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -60551,6 +60655,10 @@ export namespace Prisma {
     ayat_firman?: SortOrder
     tema_khotbah?: SortOrder
     status?: SortOrder
+    file_word_url?: SortOrder
+    file_word_id?: SortOrder
+    file_pdf_url?: SortOrder
+    file_pdf_id?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -60564,6 +60672,10 @@ export namespace Prisma {
     ayat_firman?: SortOrder
     tema_khotbah?: SortOrder
     status?: SortOrder
+    file_word_url?: SortOrder
+    file_word_id?: SortOrder
+    file_pdf_url?: SortOrder
+    file_pdf_id?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -60577,6 +60689,10 @@ export namespace Prisma {
     ayat_firman?: SortOrder
     tema_khotbah?: SortOrder
     status?: SortOrder
+    file_word_url?: SortOrder
+    file_word_id?: SortOrder
+    file_pdf_url?: SortOrder
+    file_pdf_id?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -65227,6 +65343,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     pokok_doa?: pewartaan_pokok_doaCreateNestedManyWithoutPewartaanInput
@@ -65248,6 +65368,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     pokok_doa?: pewartaan_pokok_doaUncheckedCreateNestedManyWithoutPewartaanInput
@@ -65285,6 +65409,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pokok_doa?: pewartaan_pokok_doaUpdateManyWithoutPewartaanNestedInput
@@ -65306,6 +65434,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pokok_doa?: pewartaan_pokok_doaUncheckedUpdateManyWithoutPewartaanNestedInput
@@ -65327,6 +65459,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahCreateNestedManyWithoutPewartaanInput
@@ -65348,6 +65484,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUncheckedCreateNestedManyWithoutPewartaanInput
@@ -65385,6 +65525,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUpdateManyWithoutPewartaanNestedInput
@@ -65406,6 +65550,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUncheckedUpdateManyWithoutPewartaanNestedInput
@@ -65427,6 +65575,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahCreateNestedManyWithoutPewartaanInput
@@ -65448,6 +65600,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUncheckedCreateNestedManyWithoutPewartaanInput
@@ -65485,6 +65641,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUpdateManyWithoutPewartaanNestedInput
@@ -65506,6 +65666,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUncheckedUpdateManyWithoutPewartaanNestedInput
@@ -65527,6 +65691,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahCreateNestedManyWithoutPewartaanInput
@@ -65548,6 +65716,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUncheckedCreateNestedManyWithoutPewartaanInput
@@ -65585,6 +65757,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUpdateManyWithoutPewartaanNestedInput
@@ -65606,6 +65782,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUncheckedUpdateManyWithoutPewartaanNestedInput
@@ -65627,6 +65807,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahCreateNestedManyWithoutPewartaanInput
@@ -65648,6 +65832,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUncheckedCreateNestedManyWithoutPewartaanInput
@@ -65685,6 +65873,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUpdateManyWithoutPewartaanNestedInput
@@ -65706,6 +65898,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUncheckedUpdateManyWithoutPewartaanNestedInput
@@ -65727,6 +65923,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahCreateNestedManyWithoutPewartaanInput
@@ -65748,6 +65948,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUncheckedCreateNestedManyWithoutPewartaanInput
@@ -65785,6 +65989,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUpdateManyWithoutPewartaanNestedInput
@@ -65806,6 +66014,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUncheckedUpdateManyWithoutPewartaanNestedInput
@@ -65827,6 +66039,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahCreateNestedManyWithoutPewartaanInput
@@ -65848,6 +66064,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUncheckedCreateNestedManyWithoutPewartaanInput
@@ -65885,6 +66105,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUpdateManyWithoutPewartaanNestedInput
@@ -65906,6 +66130,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUncheckedUpdateManyWithoutPewartaanNestedInput
@@ -65927,6 +66155,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahCreateNestedManyWithoutPewartaanInput
@@ -65948,6 +66180,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUncheckedCreateNestedManyWithoutPewartaanInput
@@ -65985,6 +66221,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUpdateManyWithoutPewartaanNestedInput
@@ -66006,6 +66246,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUncheckedUpdateManyWithoutPewartaanNestedInput
@@ -66027,6 +66271,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahCreateNestedManyWithoutPewartaanInput
@@ -66048,6 +66296,10 @@ export namespace Prisma {
     ayat_firman?: string | null
     tema_khotbah?: string | null
     status?: string | null
+    file_word_url?: string | null
+    file_word_id?: string | null
+    file_pdf_url?: string | null
+    file_pdf_id?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUncheckedCreateNestedManyWithoutPewartaanInput
@@ -66085,6 +66337,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUpdateManyWithoutPewartaanNestedInput
@@ -66106,6 +66362,10 @@ export namespace Prisma {
     ayat_firman?: NullableStringFieldUpdateOperationsInput | string | null
     tema_khotbah?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_word_id?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_url?: NullableStringFieldUpdateOperationsInput | string | null
+    file_pdf_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tata_ibadah?: pewartaan_tata_ibadahUncheckedUpdateManyWithoutPewartaanNestedInput

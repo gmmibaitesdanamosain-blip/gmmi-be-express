@@ -325,6 +325,10 @@ exports.Prisma.PewartaanScalarFieldEnum = {
   ayat_firman: 'ayat_firman',
   tema_khotbah: 'tema_khotbah',
   status: 'status',
+  file_word_url: 'file_word_url',
+  file_word_id: 'file_word_id',
+  file_pdf_url: 'file_pdf_url',
+  file_pdf_id: 'file_pdf_id',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };

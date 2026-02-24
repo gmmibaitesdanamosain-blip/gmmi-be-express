@@ -13,17 +13,17 @@ class PewartaanRepository {
 
     async findById(id) {
         return prisma.pewartaan.findUnique({
-            where: { id: parseInt(id) },
+            where: { id: String(id) },
             include: {
-                pewartaan_tata_ibadah: { orderBy: { urutan: 'asc' } },
-                pewartaan_pokok_doa: true,
-                pewartaan_jemaat_ultah: { orderBy: { tanggal: 'asc' } },
-                pewartaan_jemaat_sakit: true,
-                pewartaan_pemulihan: true,
-                pewartaan_lansia: true,
-                pewartaan_info_ibadah: { orderBy: [{ tanggal: 'asc' }, { jam: 'asc' }] },
-                pewartaan_pelayanan_sektor: true,
-                pewartaan_pelayanan_kategorial: { orderBy: { tanggal_waktu: 'asc' } }
+                tata_ibadah: { orderBy: { urutan: 'asc' } },
+                pokok_doa: true,
+                jemaat_ultah: { orderBy: { tanggal: 'asc' } },
+                jemaat_sakit: true,
+                pemulihan: true,
+                lansia: true,
+                info_ibadah: { orderBy: [{ tanggal: 'asc' }, { jam: 'asc' }] },
+                pelayanan_sektor: true,
+                pelayanan_kategorial: true
             }
         });
     }
@@ -61,15 +61,13 @@ class PewartaanRepository {
                     create: info_ibadah.map(i => ({ ...i, tanggal: new Date(i.tanggal) }))
                 } : undefined,
                 pelayanan_sektor: pelayanan_sektor ? { create: pelayanan_sektor } : undefined,
-                pelayanan_kategorial: pelayanan_kategorial ? {
-                    create: pelayanan_kategorial.map(p => ({ ...p, tanggal_waktu: new Date(p.tanggal_waktu) }))
-                } : undefined
+                pelayanan_kategorial: pelayanan_kategorial ? { create: pelayanan_kategorial } : undefined
             }
         });
     }
 
     async update(id, data) {
-        const pewartaanId = parseInt(id);
+        const pewartaanId = String(id);
         const {
             judul, tanggal_ibadah, hari, tempat_jemaat, ayat_firman, tema_khotbah, status,
             file_word_url, file_word_id, file_pdf_url, file_pdf_id,
@@ -114,21 +112,19 @@ class PewartaanRepository {
                         create: info_ibadah.map(i => ({ ...i, tanggal: new Date(i.tanggal) }))
                     } : undefined,
                     pelayanan_sektor: pelayanan_sektor ? { create: pelayanan_sektor } : undefined,
-                    pelayanan_kategorial: pelayanan_kategorial ? {
-                        create: pelayanan_kategorial.map(p => ({ ...p, tanggal_waktu: new Date(p.tanggal_waktu) }))
-                    } : undefined
+                    pelayanan_kategorial: pelayanan_kategorial ? { create: pelayanan_kategorial } : undefined
                 }
             });
         });
     }
 
     async delete(id) {
-        return prisma.pewartaan.delete({ where: { id: parseInt(id) } });
+        return prisma.pewartaan.delete({ where: { id: String(id) } });
     }
 
     async updateStatus(id, status) {
         return prisma.pewartaan.update({
-            where: { id: parseInt(id) },
+            where: { id: String(id) },
             data: { status }
         });
     }

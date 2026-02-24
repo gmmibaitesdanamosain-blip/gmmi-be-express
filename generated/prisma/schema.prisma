@@ -160,7 +160,7 @@ model jemaat {
   nama                String    @db.VarChar(150)
   tanggal_lahir       DateTime? @db.Date
   jenis_kelamin       String?   @db.Char(1)
-  pendidikan_terakhir String?   @db.VarChar(10)
+  pendidikan_terakhir String?   @db.VarChar(30)
   kategorial          String?   @db.VarChar(20)
   sektor_id           String
   keterangan          String?   @db.Text
@@ -282,6 +282,10 @@ model pewartaan {
   ayat_firman    String?   @db.Text
   tema_khotbah   String?   @db.VarChar(255)
   status         String?   @default("draft") @db.VarChar(50)
+  file_word_url  String?   @db.Text
+  file_word_id   String?   @db.VarChar(255)
+  file_pdf_url   String?   @db.Text
+  file_pdf_id    String?   @db.VarChar(255)
   created_at     DateTime? @default(now()) @db.Timestamp(6)
   updated_at     DateTime? @default(now()) @db.Timestamp(6)
 
