@@ -1,5 +1,5 @@
 import PewartaanService from '../services/pewartaan.service.js';
-import { uploadFile, deleteFile } from '../config/appwrite.js';
+import { deleteFile } from '../config/appwrite.js';
 
 class PewartaanController {
     async getAll(req, res) {
@@ -25,7 +25,12 @@ class PewartaanController {
 
     async create(req, res) {
         try {
-            const { judul, tanggal_ibadah, hari, tempat_jemaat, ayat_firman, tema_khotbah, status } = req.body;
+            const {
+                judul, tanggal_ibadah, hari, tempat_jemaat,
+                ayat_firman, tema_khotbah, status,
+                file_word_url, file_word_id,
+                file_pdf_url, file_pdf_id
+            } = req.body;
 
             if (!judul || judul.trim() === '') {
                 return res.status(400).json({ success: false, message: 'Judul warta wajib diisi' });
@@ -34,30 +39,13 @@ class PewartaanController {
                 return res.status(400).json({ success: false, message: 'Tanggal ibadah wajib diisi' });
             }
 
-            let file_word_url = null, file_word_id = null;
-            let file_pdf_url = null, file_pdf_id = null;
-
-            // Handle file Word upload
-            if (req.files?.file_word?.[0]) {
-                const wordFile = req.files.file_word[0];
-                const result = await uploadFile('pewartaan', wordFile);
-                file_word_url = result.url;
-                file_word_id = result.fileId;
-            }
-
-            // Handle file PDF upload
-            if (req.files?.file_pdf?.[0]) {
-                const pdfFile = req.files.file_pdf[0];
-                const result = await uploadFile('pewartaan', pdfFile);
-                file_pdf_url = result.url;
-                file_pdf_id = result.fileId;
-            }
-
             const result = await PewartaanService.create({
                 judul, tanggal_ibadah, hari, tempat_jemaat,
                 ayat_firman, tema_khotbah, status,
-                file_word_url, file_word_id,
-                file_pdf_url, file_pdf_id
+                file_word_url: file_word_url || null,
+                file_word_id: file_word_id || null,
+                file_pdf_url: file_pdf_url || null,
+                file_pdf_id: file_pdf_id || null
             });
 
             res.status(201).json({
@@ -75,40 +63,23 @@ class PewartaanController {
     async update(req, res) {
         try {
             const { id } = req.params;
-            const { judul, tanggal_ibadah, hari, tempat_jemaat, ayat_firman, tema_khotbah, status } = req.body;
-
-            // Get existing data for file cleanup
-            const existing = await PewartaanService.getById(id);
-            if (!existing) return res.status(404).json({ success: false, message: 'Pewartaan tidak ditemukan' });
-
-            let file_word_url = undefined, file_word_id = undefined;
-            let file_pdf_url = undefined, file_pdf_id = undefined;
-
-            // Handle file Word upload - hapus file lama jika ada file baru
-            if (req.files?.file_word?.[0]) {
-                if (existing.file_word_url) {
-                    await deleteFile('pewartaan', existing.file_word_url);
-                }
-                const result = await uploadFile('pewartaan', req.files.file_word[0]);
-                file_word_url = result.url;
-                file_word_id = result.fileId;
-            }
-
-            // Handle file PDF upload - hapus file lama jika ada file baru
-            if (req.files?.file_pdf?.[0]) {
-                if (existing.file_pdf_url) {
-                    await deleteFile('pewartaan', existing.file_pdf_url);
-                }
-                const result = await uploadFile('pewartaan', req.files.file_pdf[0]);
-                file_pdf_url = result.url;
-                file_pdf_id = result.fileId;
-            }
-
-            await PewartaanService.update(id, {
+            const {
                 judul, tanggal_ibadah, hari, tempat_jemaat,
                 ayat_firman, tema_khotbah, status,
                 file_word_url, file_word_id,
                 file_pdf_url, file_pdf_id
+            } = req.body;
+
+            const existing = await PewartaanService.getById(id);
+            if (!existing) return res.status(404).json({ success: false, message: 'Pewartaan tidak ditemukan' });
+
+            await PewartaanService.update(id, {
+                judul, tanggal_ibadah, hari, tempat_jemaat,
+                ayat_firman, tema_khotbah, status,
+                file_word_url: file_word_url !== undefined ? file_word_url : existing.file_word_url,
+                file_word_id: file_word_id !== undefined ? file_word_id : existing.file_word_id,
+                file_pdf_url: file_pdf_url !== undefined ? file_pdf_url : existing.file_pdf_url,
+                file_pdf_id: file_pdf_id !== undefined ? file_pdf_id : existing.file_pdf_id
             });
 
             res.json({ success: true, message: 'Pewartaan berhasil diperbarui' });
@@ -139,11 +110,10 @@ class PewartaanController {
         try {
             const { id } = req.params;
 
-            // Hapus file dari Appwrite sebelum hapus dari DB
             const existing = await PewartaanService.getById(id);
             if (existing) {
-                if (existing.file_word_url) await deleteFile('pewartaan', existing.file_word_url);
-                if (existing.file_pdf_url) await deleteFile('pewartaan', existing.file_pdf_url);
+                if (existing.file_word_id) await deleteFile('pewartaan', existing.file_word_id);
+                if (existing.file_pdf_id) await deleteFile('pewartaan', existing.file_pdf_id);
             }
 
             await PewartaanService.delete(id);
