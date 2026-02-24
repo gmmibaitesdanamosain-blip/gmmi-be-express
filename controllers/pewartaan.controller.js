@@ -112,8 +112,8 @@ class PewartaanController {
 
             const existing = await PewartaanService.getById(id);
             if (existing) {
-                if (existing.file_word_id) await deleteFile('pewartaan', existing.file_word_id);
-                if (existing.file_pdf_id) await deleteFile('pewartaan', existing.file_pdf_id);
+                if (existing.file_word_url) await deleteFile('pewartaan', existing.file_word_url);
+                if (existing.file_pdf_url) await deleteFile('pewartaan', existing.file_pdf_url);
             }
 
             await PewartaanService.delete(id);
