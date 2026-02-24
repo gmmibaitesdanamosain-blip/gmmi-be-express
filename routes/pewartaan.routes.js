@@ -34,8 +34,8 @@ router.get('/', authenticateToken, PewartaanController.getAll);
 router.get('/:id', authenticateToken, PewartaanController.getById);
 
 // Admin & Super Admin
-router.post('/', authenticateToken, isAdmin, uploadFields, PewartaanController.create);
-router.put('/:id', authenticateToken, isAdmin, uploadFields, PewartaanController.update);
+router.post('/', authenticateToken, isAdmin, PewartaanController.create);
+router.put('/:id', authenticateToken, isAdmin, PewartaanController.update);
 router.patch('/:id/status', authenticateToken, isAdmin, PewartaanController.updateStatus);
 router.delete('/:id', authenticateToken, isAdmin, PewartaanController.delete);
 
