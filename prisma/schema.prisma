@@ -234,13 +234,18 @@ model laporan_keuangan {
   id              String    @id @default(dbgenerated("'lkn_' || replace(gen_random_uuid()::text, '-', '')"))
   tanggal         DateTime  @db.Date
   keterangan      String    @db.Text
+  tipe            String    @default("transaksi") @db.VarChar(20)
   kas_penerimaan  Decimal?  @default(0) @db.Decimal(15, 2)
   kas_pengeluaran Decimal?  @default(0) @db.Decimal(15, 2)
+  saldo_kas       Decimal?  @default(0) @db.Decimal(15, 2)
   bank_debit      Decimal?  @default(0) @db.Decimal(15, 2)
   bank_kredit     Decimal?  @default(0) @db.Decimal(15, 2)
+  saldo_bank      Decimal?  @default(0) @db.Decimal(15, 2)
   created_by      String?
   created_at      DateTime? @default(now()) @db.Timestamp(6)
   updated_at      DateTime? @default(now()) @db.Timestamp(6)
+
+  @@index([tanggal])
 }
 
 model log_notifikasi {
