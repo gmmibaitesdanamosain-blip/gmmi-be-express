@@ -16,17 +16,390 @@ function toNum(val) {
     return Number(val ?? 0);
 }
 
+/** Normalise query-param date: undefined / null / "" / "null" / "undefined" → null */
+function parseDate(val) {
+    if (!val || val === 'null' || val === 'undefined') return null;
+    return new Date(val);
+}
+
+// ── Excel style constants ────────────────────────────────────────────────────
+const ARGB_NAVY      = 'FF1e3a5f';
+const ARGB_WHITE     = 'FFFFFFFF';
+const ARGB_DARK_GRAY = 'FF424242';
+const ARGB_YELLOW    = 'FFFFF9C4';
+const NUM_FMT        = '#,##0';
+
+const MONEY_COLS_DETAIL   = ['kas_penerimaan', 'kas_pengeluaran', 'saldo_kas', 'bank_debit', 'bank_kredit', 'saldo_bank'];
+const MONEY_COLS_SUMMARY  = ['kas_penerimaan', 'kas_pengeluaran', 'bank_debit', 'bank_kredit', 'saldo_kas', 'saldo_bank'];
+
+function applyHeaderStyle(row) {
+    row.height = 22;
+    row.eachCell(cell => {
+        cell.fill      = { type: 'pattern', pattern: 'solid', fgColor: { argb: ARGB_NAVY } };
+        cell.font      = { color: { argb: ARGB_WHITE }, bold: true, size: 11 };
+        cell.alignment = { horizontal: 'center', vertical: 'middle' };
+        cell.border    = {
+            top: { style: 'thin' }, bottom: { style: 'thin' },
+            left: { style: 'thin' }, right:  { style: 'thin' }
+        };
+    });
+}
+
+function applyTotalStyle(row, moneyCols) {
+    row.eachCell(cell => {
+        cell.fill   = { type: 'pattern', pattern: 'solid', fgColor: { argb: ARGB_DARK_GRAY } };
+        cell.font   = { bold: true, color: { argb: ARGB_WHITE } };
+        cell.border = {
+            top: { style: 'medium' }, bottom: { style: 'thin' },
+            left: { style: 'thin' },  right:  { style: 'thin' }
+        };
+    });
+    moneyCols.forEach(col => { row.getCell(col).numFmt = NUM_FMT; });
+}
+
+// ── Sheet 1: Detail Transaksi ────────────────────────────────────────────────
+function buildDetailSheet(workbook, rows) {
+    const sheet = workbook.addWorksheet('Detail Transaksi');
+
+    sheet.columns = [
+        { header: 'NO',           key: 'no',              width: 6  },
+        { header: 'TANGGAL',      key: 'tanggal',         width: 22 },
+        { header: 'KETERANGAN',   key: 'keterangan',      width: 38 },
+        { header: 'KAS MASUK',    key: 'kas_penerimaan',  width: 18 },
+        { header: 'KAS KELUAR',   key: 'kas_pengeluaran', width: 18 },
+        { header: 'SALDO KAS',    key: 'saldo_kas',       width: 18 },
+        { header: 'BANK DEBIT',   key: 'bank_debit',      width: 18 },
+        { header: 'BANK KREDIT',  key: 'bank_kredit',     width: 18 },
+        { header: 'SALDO BANK',   key: 'saldo_bank',      width: 18 }
+    ];
+
+    applyHeaderStyle(sheet.getRow(1));
+
+    let totKasMasuk = 0, totKasKeluar = 0;
+    let totBankDebit = 0, totBankKredit = 0;
+    let lastSaldoKas = 0, lastSaldoBank = 0;
+
+    rows.forEach((row, idx) => {
+        const isSaldoAwal    = row.tipe === 'saldo_awal';
+        const kasPenerimaan  = toNum(row.kas_penerimaan);
+        const kasPengeluaran = toNum(row.kas_pengeluaran);
+        const saldoKas       = toNum(row.saldo_kas);
+        const bankDebit      = toNum(row.bank_debit);
+        const bankKredit     = toNum(row.bank_kredit);
+        const saldoBank      = toNum(row.saldo_bank);
+
+        totKasMasuk  += kasPenerimaan;
+        totKasKeluar += kasPengeluaran;
+        totBankDebit  += bankDebit;
+        totBankKredit += bankKredit;
+        lastSaldoKas  = saldoKas;
+        lastSaldoBank = saldoBank;
+
+        const dataRow = sheet.addRow({
+            no:              idx + 1,
+            tanggal:         formatTanggalId(row.tanggal),
+            keterangan:      isSaldoAwal ? 'SALDO AWAL' : (row.keterangan ?? ''),
+            kas_penerimaan:  kasPenerimaan,
+            kas_pengeluaran: kasPengeluaran,
+            saldo_kas:       saldoKas,
+            bank_debit:      bankDebit,
+            bank_kredit:     bankKredit,
+            saldo_bank:      saldoBank
+        });
+
+        MONEY_COLS_DETAIL.forEach(col => { dataRow.getCell(col).numFmt = NUM_FMT; });
+        dataRow.getCell('saldo_kas').font  = { bold: true };
+        dataRow.getCell('saldo_bank').font = { bold: true };
+
+        if (isSaldoAwal) {
+            dataRow.eachCell(cell => {
+                cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: ARGB_YELLOW } };
+                cell.font = { ...(cell.font ?? {}), italic: true };
+            });
+            // Terapkan ulang bold saldo setelah override font
+            dataRow.getCell('saldo_kas').font  = { bold: true, italic: true };
+            dataRow.getCell('saldo_bank').font = { bold: true, italic: true };
+        }
+    });
+
+    const totalRow = sheet.addRow({
+        no:              '',
+        tanggal:         'TOTAL',
+        keterangan:      '',
+        kas_penerimaan:  totKasMasuk,
+        kas_pengeluaran: totKasKeluar,
+        saldo_kas:       lastSaldoKas,
+        bank_debit:      totBankDebit,
+        bank_kredit:     totBankKredit,
+        saldo_bank:      lastSaldoBank
+    });
+    applyTotalStyle(totalRow, MONEY_COLS_DETAIL);
+    totalRow.getCell('tanggal').numFmt = '@';
+}
+
+// ── Sheet 2: Ringkasan Per Minggu ────────────────────────────────────────────
+
+/** Kembalikan tanggal Senin dari minggu yang sama sebagai string YYYY-MM-DD (UTC). */
+function getMondayKey(tanggal) {
+    const d   = new Date(tanggal);
+    const day = d.getUTCDay();                      // 0=Min, 1=Sen, ..., 6=Sab
+    const diffToMonday = day === 0 ? -6 : 1 - day;
+    const monday = new Date(d);
+    monday.setUTCDate(d.getUTCDate() + diffToMonday);
+    return monday.toISOString().slice(0, 10);
+}
+
+function formatPeriodeMinggu(mondayStr) {
+    const monday = new Date(mondayStr + 'T00:00:00Z');
+    const sunday = new Date(monday);
+    sunday.setUTCDate(monday.getUTCDate() + 6);
+
+    const d1 = monday.getUTCDate();
+    const m1 = BULAN_ID[monday.getUTCMonth()];
+    const y1 = monday.getUTCFullYear();
+    const d2 = sunday.getUTCDate();
+    const m2 = BULAN_ID[sunday.getUTCMonth()];
+    const y2 = sunday.getUTCFullYear();
+
+    if (y1 === y2 && monday.getUTCMonth() === sunday.getUTCMonth()) {
+        return `${d1}–${d2} ${m1} ${y1}`;
+    }
+    if (y1 === y2) {
+        return `${d1} ${m1} – ${d2} ${m2} ${y1}`;
+    }
+    return `${d1} ${m1} ${y1} – ${d2} ${m2} ${y2}`;
+}
+
+function buildWeeklySheet(workbook, rows) {
+    const sheet = workbook.addWorksheet('Ringkasan Per Minggu');
+
+    sheet.columns = [
+        { header: 'PERIODE MINGGU',   key: 'periode',         width: 28 },
+        { header: 'KAS MASUK',        key: 'kas_penerimaan',  width: 18 },
+        { header: 'KAS KELUAR',       key: 'kas_pengeluaran', width: 18 },
+        { header: 'BANK DEBIT',       key: 'bank_debit',      width: 18 },
+        { header: 'BANK KREDIT',      key: 'bank_kredit',     width: 18 },
+        { header: 'SALDO KAS AKHIR',  key: 'saldo_kas',       width: 18 },
+        { header: 'SALDO BANK AKHIR', key: 'saldo_bank',      width: 18 }
+    ];
+
+    applyHeaderStyle(sheet.getRow(1));
+
+    // Grup berurutan — Map mempertahankan insertion order
+    const weekMap = new Map();
+    for (const row of rows) {
+        const wk = getMondayKey(row.tanggal);
+        if (!weekMap.has(wk)) {
+            weekMap.set(wk, { kasMasuk: 0, kasKeluar: 0, bankDebit: 0, bankKredit: 0, saldoKas: 0, saldoBank: 0 });
+        }
+        const g = weekMap.get(wk);
+        g.kasMasuk  += toNum(row.kas_penerimaan);
+        g.kasKeluar += toNum(row.kas_pengeluaran);
+        g.bankDebit  += toNum(row.bank_debit);
+        g.bankKredit += toNum(row.bank_kredit);
+        // Baris terakhir dalam minggu → saldo akhir minggu itu
+        g.saldoKas  = toNum(row.saldo_kas);
+        g.saldoBank = toNum(row.saldo_bank);
+    }
+
+    let totKasMasuk = 0, totKasKeluar = 0;
+    let totBankDebit = 0, totBankKredit = 0;
+    let lastSaldoKas = 0, lastSaldoBank = 0;
+
+    for (const [wk, g] of weekMap) {
+        totKasMasuk  += g.kasMasuk;
+        totKasKeluar += g.kasKeluar;
+        totBankDebit  += g.bankDebit;
+        totBankKredit += g.bankKredit;
+        lastSaldoKas  = g.saldoKas;
+        lastSaldoBank = g.saldoBank;
+
+        const dataRow = sheet.addRow({
+            periode:         formatPeriodeMinggu(wk),
+            kas_penerimaan:  g.kasMasuk,
+            kas_pengeluaran: g.kasKeluar,
+            bank_debit:      g.bankDebit,
+            bank_kredit:     g.bankKredit,
+            saldo_kas:       g.saldoKas,
+            saldo_bank:      g.saldoBank
+        });
+        MONEY_COLS_SUMMARY.forEach(col => { dataRow.getCell(col).numFmt = NUM_FMT; });
+        dataRow.getCell('saldo_kas').font  = { bold: true };
+        dataRow.getCell('saldo_bank').font = { bold: true };
+    }
+
+    const totalRow = sheet.addRow({
+        periode:         'TOTAL',
+        kas_penerimaan:  totKasMasuk,
+        kas_pengeluaran: totKasKeluar,
+        bank_debit:      totBankDebit,
+        bank_kredit:     totBankKredit,
+        saldo_kas:       lastSaldoKas,
+        saldo_bank:      lastSaldoBank
+    });
+    applyTotalStyle(totalRow, MONEY_COLS_SUMMARY);
+    totalRow.getCell('periode').numFmt = '@';
+}
+
+// ── Sheet 3: Ringkasan Per Bulan ─────────────────────────────────────────────
+function buildMonthlySheet(workbook, rows) {
+    const sheet = workbook.addWorksheet('Ringkasan Per Bulan');
+
+    sheet.columns = [
+        { header: 'BULAN',            key: 'bulan',           width: 20 },
+        { header: 'KAS MASUK',        key: 'kas_penerimaan',  width: 18 },
+        { header: 'KAS KELUAR',       key: 'kas_pengeluaran', width: 18 },
+        { header: 'BANK DEBIT',       key: 'bank_debit',      width: 18 },
+        { header: 'BANK KREDIT',      key: 'bank_kredit',     width: 18 },
+        { header: 'SALDO KAS AKHIR',  key: 'saldo_kas',       width: 18 },
+        { header: 'SALDO BANK AKHIR', key: 'saldo_bank',      width: 18 }
+    ];
+
+    applyHeaderStyle(sheet.getRow(1));
+
+    const monthMap = new Map();
+    for (const row of rows) {
+        const dt  = new Date(row.tanggal);
+        const yr  = dt.getUTCFullYear();
+        const mo  = dt.getUTCMonth();
+        const mk  = `${yr}-${String(mo + 1).padStart(2, '0')}`;
+        if (!monthMap.has(mk)) {
+            monthMap.set(mk, {
+                label: `${BULAN_ID[mo]} ${yr}`,
+                kasMasuk: 0, kasKeluar: 0, bankDebit: 0, bankKredit: 0, saldoKas: 0, saldoBank: 0
+            });
+        }
+        const g = monthMap.get(mk);
+        g.kasMasuk  += toNum(row.kas_penerimaan);
+        g.kasKeluar += toNum(row.kas_pengeluaran);
+        g.bankDebit  += toNum(row.bank_debit);
+        g.bankKredit += toNum(row.bank_kredit);
+        g.saldoKas  = toNum(row.saldo_kas);
+        g.saldoBank = toNum(row.saldo_bank);
+    }
+
+    let totKasMasuk = 0, totKasKeluar = 0;
+    let totBankDebit = 0, totBankKredit = 0;
+    let lastSaldoKas = 0, lastSaldoBank = 0;
+
+    for (const [, g] of monthMap) {
+        totKasMasuk  += g.kasMasuk;
+        totKasKeluar += g.kasKeluar;
+        totBankDebit  += g.bankDebit;
+        totBankKredit += g.bankKredit;
+        lastSaldoKas  = g.saldoKas;
+        lastSaldoBank = g.saldoBank;
+
+        const dataRow = sheet.addRow({
+            bulan:           g.label,
+            kas_penerimaan:  g.kasMasuk,
+            kas_pengeluaran: g.kasKeluar,
+            bank_debit:      g.bankDebit,
+            bank_kredit:     g.bankKredit,
+            saldo_kas:       g.saldoKas,
+            saldo_bank:      g.saldoBank
+        });
+        MONEY_COLS_SUMMARY.forEach(col => { dataRow.getCell(col).numFmt = NUM_FMT; });
+        dataRow.getCell('saldo_kas').font  = { bold: true };
+        dataRow.getCell('saldo_bank').font = { bold: true };
+    }
+
+    const totalRow = sheet.addRow({
+        bulan:           'TOTAL',
+        kas_penerimaan:  totKasMasuk,
+        kas_pengeluaran: totKasKeluar,
+        bank_debit:      totBankDebit,
+        bank_kredit:     totBankKredit,
+        saldo_kas:       lastSaldoKas,
+        saldo_bank:      lastSaldoBank
+    });
+    applyTotalStyle(totalRow, MONEY_COLS_SUMMARY);
+    totalRow.getCell('bulan').numFmt = '@';
+}
+
+// ── Sheet 4: Ringkasan Per Tahun ─────────────────────────────────────────────
+function buildYearlySheet(workbook, rows) {
+    const sheet = workbook.addWorksheet('Ringkasan Per Tahun');
+
+    sheet.columns = [
+        { header: 'TAHUN',            key: 'tahun',           width: 12 },
+        { header: 'KAS MASUK',        key: 'kas_penerimaan',  width: 18 },
+        { header: 'KAS KELUAR',       key: 'kas_pengeluaran', width: 18 },
+        { header: 'BANK DEBIT',       key: 'bank_debit',      width: 18 },
+        { header: 'BANK KREDIT',      key: 'bank_kredit',     width: 18 },
+        { header: 'SALDO KAS AKHIR',  key: 'saldo_kas',       width: 18 },
+        { header: 'SALDO BANK AKHIR', key: 'saldo_bank',      width: 18 }
+    ];
+
+    applyHeaderStyle(sheet.getRow(1));
+
+    const yearMap = new Map();
+    for (const row of rows) {
+        const yk = String(new Date(row.tanggal).getUTCFullYear());
+        if (!yearMap.has(yk)) {
+            yearMap.set(yk, { kasMasuk: 0, kasKeluar: 0, bankDebit: 0, bankKredit: 0, saldoKas: 0, saldoBank: 0 });
+        }
+        const g = yearMap.get(yk);
+        g.kasMasuk  += toNum(row.kas_penerimaan);
+        g.kasKeluar += toNum(row.kas_pengeluaran);
+        g.bankDebit  += toNum(row.bank_debit);
+        g.bankKredit += toNum(row.bank_kredit);
+        g.saldoKas  = toNum(row.saldo_kas);
+        g.saldoBank = toNum(row.saldo_bank);
+    }
+
+    let totKasMasuk = 0, totKasKeluar = 0;
+    let totBankDebit = 0, totBankKredit = 0;
+    let lastSaldoKas = 0, lastSaldoBank = 0;
+
+    for (const [yk, g] of yearMap) {
+        totKasMasuk  += g.kasMasuk;
+        totKasKeluar += g.kasKeluar;
+        totBankDebit  += g.bankDebit;
+        totBankKredit += g.bankKredit;
+        lastSaldoKas  = g.saldoKas;
+        lastSaldoBank = g.saldoBank;
+
+        const dataRow = sheet.addRow({
+            tahun:           yk,
+            kas_penerimaan:  g.kasMasuk,
+            kas_pengeluaran: g.kasKeluar,
+            bank_debit:      g.bankDebit,
+            bank_kredit:     g.bankKredit,
+            saldo_kas:       g.saldoKas,
+            saldo_bank:      g.saldoBank
+        });
+        MONEY_COLS_SUMMARY.forEach(col => { dataRow.getCell(col).numFmt = NUM_FMT; });
+        dataRow.getCell('saldo_kas').font  = { bold: true };
+        dataRow.getCell('saldo_bank').font = { bold: true };
+    }
+
+    const totalRow = sheet.addRow({
+        tahun:           'TOTAL',
+        kas_penerimaan:  totKasMasuk,
+        kas_pengeluaran: totKasKeluar,
+        bank_debit:      totBankDebit,
+        bank_kredit:     totBankKredit,
+        saldo_kas:       lastSaldoKas,
+        saldo_bank:      lastSaldoBank
+    });
+    applyTotalStyle(totalRow, MONEY_COLS_SUMMARY);
+    totalRow.getCell('tahun').numFmt = '@';
+}
+
+// ────────────────────────────────────────────────────────────────────────────
 class KeuanganService {
 
     // ─── GET /api/keuangan ──────────────────────────────────────────
     async getAll(filters = {}) {
-        const { startDate, endDate } = filters;
+        const start = parseDate(filters.startDate);
+        const end   = parseDate(filters.endDate);
 
         const where = {};
-        if (startDate || endDate) {
+        if (start || end) {
             where.tanggal = {};
-            if (startDate) where.tanggal.gte = new Date(startDate);
-            if (endDate)   where.tanggal.lte = new Date(endDate);
+            if (start) where.tanggal.gte = start;
+            if (end)   where.tanggal.lte = end;
         }
 
         const rows = await KeuanganRepository.findMany({
@@ -217,13 +590,14 @@ class KeuanganService {
 
     // ─── GET /api/keuangan/export ───────────────────────────────────
     async export(filters = {}) {
-        const { startDate, endDate } = filters;
+        const start = parseDate(filters.startDate);
+        const end   = parseDate(filters.endDate);
 
         const where = {};
-        if (startDate || endDate) {
+        if (start || end) {
             where.tanggal = {};
-            if (startDate) where.tanggal.gte = new Date(startDate);
-            if (endDate)   where.tanggal.lte = new Date(endDate);
+            if (start) where.tanggal.gte = start;
+            if (end)   where.tanggal.lte = end;
         }
 
         const rows = await KeuanganRepository.findMany({
@@ -231,124 +605,21 @@ class KeuanganService {
             orderBy: [{ tanggal: 'asc' }, { created_at: 'asc' }]
         });
 
-        // ── Buat workbook ─────────────────────────────────────────
         const workbook = new ExcelJS.Workbook();
         workbook.creator = 'GMMI';
         workbook.created = new Date();
 
-        const sheet = workbook.addWorksheet('Laporan Keuangan');
+        buildDetailSheet(workbook, rows);
+        buildWeeklySheet(workbook, rows);
+        buildMonthlySheet(workbook, rows);
+        buildYearlySheet(workbook, rows);
 
-        // ── Definisi kolom ────────────────────────────────────────
-        sheet.columns = [
-            { header: 'TANGGAL',      key: 'tanggal',         width: 22 },
-            { header: 'KETERANGAN',   key: 'keterangan',      width: 38 },
-            { header: 'KAS (MASUK)',  key: 'kas_penerimaan',  width: 18 },
-            { header: 'KAS (KELUAR)', key: 'kas_pengeluaran', width: 18 },
-            { header: 'SALDO KAS',    key: 'saldo_kas',       width: 18 },
-            { header: 'BANK (DEBIT)', key: 'bank_debit',      width: 18 },
-            { header: 'BANK (KREDIT)',key: 'bank_kredit',     width: 18 },
-            { header: 'SALDO BANK',   key: 'saldo_bank',      width: 18 }
-        ];
-
-        // ── Style baris header (row 1) ────────────────────────────
-        const headerRow = sheet.getRow(1);
-        headerRow.height = 22;
-        headerRow.eachCell(cell => {
-            cell.fill      = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1e3a5f' } };
-            cell.font      = { color: { argb: 'FFFFFFFF' }, bold: true, size: 11 };
-            cell.alignment = { horizontal: 'center', vertical: 'middle' };
-            cell.border    = {
-                top:    { style: 'thin' }, bottom: { style: 'thin' },
-                left:   { style: 'thin' }, right:  { style: 'thin' }
-            };
-        });
-
-        // ── Format angka (rupiah tanpa simbol Rp) ─────────────────
-        const numFmt = '#,##0';
-
-        // ── Akumulator untuk baris TOTAL ──────────────────────────
-        let totKasMasuk = 0, totKasKeluar = 0;
-        let totBankDebit = 0, totBankKredit = 0;
-        let lastSaldoKas = 0, lastSaldoBank = 0;
-
-        // ── Isi baris data ────────────────────────────────────────
-        for (const row of rows) {
-            const isSaldoAwal  = row.tipe === 'saldo_awal';
-            const kasPenerimaan  = toNum(row.kas_penerimaan);
-            const kasPengeluaran = toNum(row.kas_pengeluaran);
-            const saldoKas       = toNum(row.saldo_kas);
-            const bankDebit      = toNum(row.bank_debit);
-            const bankKredit     = toNum(row.bank_kredit);
-            const saldoBank      = toNum(row.saldo_bank);
-
-            totKasMasuk  += kasPenerimaan;
-            totKasKeluar += kasPengeluaran;
-            totBankDebit  += bankDebit;
-            totBankKredit += bankKredit;
-            lastSaldoKas  = saldoKas;
-            lastSaldoBank = saldoBank;
-
-            const dataRow = sheet.addRow({
-                tanggal:         formatTanggalId(row.tanggal),
-                keterangan:      isSaldoAwal ? 'SALDO AWAL' : (row.keterangan ?? ''),
-                kas_penerimaan:  kasPenerimaan,
-                kas_pengeluaran: kasPengeluaran,
-                saldo_kas:       saldoKas,
-                bank_debit:      bankDebit,
-                bank_kredit:     bankKredit,
-                saldo_bank:      saldoBank
-            });
-
-            // Format angka
-            ['kas_penerimaan', 'kas_pengeluaran', 'saldo_kas',
-             'bank_debit', 'bank_kredit', 'saldo_bank'].forEach(key => {
-                dataRow.getCell(key).numFmt = numFmt;
-            });
-
-            // Kolom saldo: bold
-            dataRow.getCell('saldo_kas').font  = { bold: true };
-            dataRow.getCell('saldo_bank').font = { bold: true };
-
-            // Baris saldo_awal: background kuning, italic
-            if (isSaldoAwal) {
-                dataRow.eachCell(cell => {
-                    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF9C4' } };
-                    cell.font = { ...(cell.font ?? {}), italic: true };
-                });
-                // Terapkan ulang bold saldo setelah override font
-                dataRow.getCell('saldo_kas').font  = { bold: true, italic: true };
-                dataRow.getCell('saldo_bank').font = { bold: true, italic: true };
-            }
-        }
-
-        // ── Baris TOTAL ───────────────────────────────────────────
-        const totalRow = sheet.addRow({
-            tanggal:         'TOTAL',
-            keterangan:      '',
-            kas_penerimaan:  totKasMasuk,
-            kas_pengeluaran: totKasKeluar,
-            saldo_kas:       lastSaldoKas,
-            bank_debit:      totBankDebit,
-            bank_kredit:     totBankKredit,
-            saldo_bank:      lastSaldoBank
-        });
-
-        totalRow.eachCell(cell => {
-            cell.font   = { bold: true };
-            cell.numFmt = numFmt;
-            cell.border = {
-                top:    { style: 'medium' },
-                bottom: { style: 'thin' },
-                left:   { style: 'thin' },
-                right:  { style: 'thin' }
-            };
-        });
-        totalRow.getCell('tanggal').numFmt = '@'; // pastikan "TOTAL" tidak diformat angka
-
-        // ── Nama file ─────────────────────────────────────────────
-        const labelStart = startDate ?? 'awal';
-        const labelEnd   = endDate   ?? 'akhir';
-        const filename   = `Laporan_Keuangan_GMMI_${labelStart}_${labelEnd}.xlsx`;
+        const hasFilter  = start || end;
+        const labelStart = filters.startDate;
+        const labelEnd   = filters.endDate;
+        const filename   = hasFilter
+            ? `Laporan_Keuangan_GMMI_${labelStart}_${labelEnd}.xlsx`
+            : 'Laporan_Keuangan_GMMI_Semua.xlsx';
 
         return { workbook, filename };
     }
